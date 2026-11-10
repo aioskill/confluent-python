@@ -4,11 +4,21 @@
 Confluent Kafka Python `AdminClient`, then combine that metadata with KRaft
 quorum status to identify controller voters and the active controller.
 
-Install the Python client and Schema Registry serializer dependencies in the
-environment where the scripts will run:
+The Confluent Ansible role installs the Python client and Schema Registry
+serializer dependencies in `/app/confluent/python-venv` on each broker. On a
+broker, activate that environment before running the examples:
 
 ```bash
-python3 -m pip install 'confluent-kafka[avro,json,protobuf,schemaregistry]'
+source /app/confluent/python-venv/bin/activate
+```
+
+For a separate machine, create a local environment and install the pinned
+project dependencies instead:
+
+```bash
+python3 -m venv .venv
+.venv/bin/pip install -r requirements.txt
+source .venv/bin/activate
 ```
 
 Kafka uses SASL/SCRAM-SHA-512. When run on a broker, the tutorials read the
