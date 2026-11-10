@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Order",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "order_id": {"type": "string"},
+    "customer_id": {"type": "string"},
+    "amount": {"type": "number", "minimum": 0},
+    "status": {
+      "type": "string",
+      "enum": ["CREATED", "PAID", "CANCELLED"]
+    }
+  },
+  "required": ["order_id", "customer_id", "amount", "status"]
+}
