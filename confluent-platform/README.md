@@ -46,6 +46,21 @@ The script uses the Kafka metadata API for brokers and
 combined broker/controller topology, each node should appear as both a broker
 and controller voter; one voter is also shown as the active controller.
 
+For guided quorum health, membership, and replacement exercises, see the
+[KRaft administration exercise book](KRAFT-ADMINISTRATION-EXERCISE-BOOK.md).
+
+For a hands-on cluster operations lab covering topic placement, retention,
+and partition reassignment, see the
+[cluster setup and partition reassignment lab](CLUSTER-SETUP-PARTITION-REASSIGNMENT-LAB.md).
+
+For a focused failover exercise that demonstrates how
+`min.insync.replicas` affects `acks=all` writes and consumer reads, see the
+[broker failover and minimum ISR lab](FAILOVER-MIN-INSYNC-REPLICAS-LAB.md).
+
+For application principals, topic and consumer-group ACLs, and an
+unauthorized-access check, see the
+[SCRAM and ACL security lab](SECURING-KAFKA-ACL-EXERCISES.md).
+
 ## Topic management tutorial
 
 `manage_topics.py` demonstrates topic operations with the Python AdminClient.

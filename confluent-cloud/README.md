@@ -1,14 +1,29 @@
 # Confluent Cloud Python tutorials
 
 For the separate Confluent CLI walkthrough, see
-[CONFLUENT_CLI.md](CONFLUENT_CLI.md).
+[Lab 4: Confluent CLI](LAB-4-CONFLUENT_CLI.md).
 
-To invite human users from an email list and assign Cloud roles, see
-[`invite_users_and_assign_roles.sh`](invite_users_and_assign_roles.sh) and its
-usage notes in the CLI walkthrough.
+For a console-style Confluent Cloud produce/consume exercise using this
+directory's `.env` credentials, see
+[console-produce-consume.md](console-produce-consume.md).
+
+For CLI and Terraform provisioning, service-account API keys, and endpoint
+checks, see [Lab 3: Provisioning via CLI & Terraform](LAB-3-PROVISIONING-VIA-CLI-TERRAFORM.md).
+
+To invite human users from an email list, see [`invite_users.sh`](invite_users.sh).
+[`assign_roles.sh`](assign_roles.sh) dynamically finds current users and grants
+`OrganizationAdmin` to everyone except `training@avalanchio.com`; this grants
+full access across the organization, so use it only in a dedicated training
+organization. See [Lab 4](LAB-4-CONFLUENT_CLI.md) for usage details.
+
+For a hands-on service-account RBAC exercise covering prefixed topic access,
+environment-wide administration, authorization denial, and audit logs, see
+the [Lab 5: RBAC And Audit Logs](LAB-5-RBAC-PREFIX-AND-AUDIT-LAB.md).
 
 On Ubuntu 24.x, install the CLI with
 [`install_confluent_cli_ubuntu24.sh`](install_confluent_cli_ubuntu24.sh).
+Install Terraform with
+[`install_terraform_ubuntu24.sh`](install_terraform_ubuntu24.sh).
 
 These scripts use Confluent Cloud's native Kafka endpoint and Schema Registry.
 They load the adjacent `.env` file automatically. Credential values are never
@@ -31,19 +46,27 @@ The loader accepts the existing `BOOTSTRAP_SERVRS` spelling and the corrected
 settings with process environment variables. Kafka clients use `SASL_SSL` and
 `PLAIN`; Schema Registry clients use HTTP Basic Auth.
 
-Install the dependencies, then run commands from this directory:
+Activate the Python environment that has the dependencies (or create a
+virtualenv; Ubuntu 24 blocks system-wide `pip install`), then run commands from
+this directory:
 
 ```bash
-python3 -m pip install -r requirements.txt
+python3 -m venv .venv && source .venv/bin/activate
+python -m pip install -r requirements.txt
 python3 discover_cluster.py
 python3 verify_confluent_cloud.py
 ```
 
 ## Topic management
 
+In a class, all learners share one Kafka cluster. Replace `<STUDENT_ID>` with
+your instructor-assigned ID (for example `s07`) in every topic name below so
+topics and Schema Registry subjects (`<topic>-value`) do not collide. Examples
+that use a plain `demo` topic are for single-user practice.
+
 ```bash
 python3 manage_topics.py list
-python3 manage_topics.py create demo --partitions 3
+python3 manage_topics.py create demo --partitions 1
 python3 manage_topics.py describe demo
 python3 manage_topics.py config demo --set retention.ms=604800000
 python3 manage_topics.py config demo --delete retention.ms
@@ -65,18 +88,18 @@ Create the topic before producing. The consumer uses a fresh group by default,
 so it reads existing messages from the beginning:
 
 ```bash
-python3 manage_topics.py create demo-messages --partitions 3
-python3 produce_messages.py demo-messages --count 10
-python3 consume_messages.py demo-messages --count 10
+python3 manage_topics.py create demo-messages-<STUDENT_ID> --partitions 1
+python3 produce_messages.py demo-messages-<STUDENT_ID> --count 10
+python3 consume_messages.py demo-messages-<STUDENT_ID> --count 10
 ```
 
 ## Compacted topics
 
 ```bash
-python3 manage_topics.py create compact-demo --partitions 3
-python3 manage_topics.py config compact-demo --set cleanup.policy=compact
-python3 produce_compacted_messages.py compact-demo
-python3 consume_compacted_topic.py compact-demo
+python3 manage_topics.py create compact-demo-<STUDENT_ID> --partitions 1
+python3 manage_topics.py config compact-demo-<STUDENT_ID> --set cleanup.policy=compact
+python3 produce_compacted_messages.py compact-demo-<STUDENT_ID>
+python3 consume_compacted_topic.py compact-demo-<STUDENT_ID>
 ```
 
 Compaction runs asynchronously. The consumer folds updates and tombstones into
@@ -94,17 +117,17 @@ principal needs those topic permissions and permission to use a consumer group;
 a cluster-scoped `CloudClusterAdmin` role is sufficient for the demo workflow.
 
 ```bash
-python3 manage_topics.py create json-orders --partitions 3
-python3 produce_json_schema.py json-orders --count 5
-python3 consume_json_schema.py json-orders --count 5
+python3 manage_topics.py create json-orders-<STUDENT_ID> --partitions 1
+python3 produce_json_schema.py json-orders-<STUDENT_ID> --count 5
+python3 consume_json_schema.py json-orders-<STUDENT_ID> --count 5
 
-python3 manage_topics.py create avro-orders --partitions 3
-python3 produce_avro.py avro-orders --count 5
-python3 consume_avro.py avro-orders --count 5
+python3 manage_topics.py create avro-orders-<STUDENT_ID> --partitions 1
+python3 produce_avro.py avro-orders-<STUDENT_ID> --count 5
+python3 consume_avro.py avro-orders-<STUDENT_ID> --count 5
 
-python3 manage_topics.py create protobuf-orders --partitions 3
-python3 produce_protobuf.py protobuf-orders --count 5
-python3 consume_protobuf.py protobuf-orders --count 5
+python3 manage_topics.py create protobuf-orders-<STUDENT_ID> --partitions 1
+python3 produce_protobuf.py protobuf-orders-<STUDENT_ID> --count 5
+python3 consume_protobuf.py protobuf-orders-<STUDENT_ID> --count 5
 ```
 
 `order_pb2.py` is generated from `order.proto` and is included so no Protobuf

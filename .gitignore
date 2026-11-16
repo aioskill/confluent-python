@@ -76,4 +76,5 @@ wolfctl-*.yml
 **/kafka-client.properties
 **/*.tfstate
 **/*.tfstate.*
+AGENTS.md
 
