@@ -32,7 +32,7 @@ contains data you need.
 
 ## Prerequisites
 
-- Confluent CLI `install_confluent_cli_ubuntu24.sh` and Terraform installed (use `install_terraform_ubuntu24.sh`).
+- Confluent CLI `install_confluent_cli_ubuntu.sh` and Terraform installed (use `install_terraform_ubuntu24.sh`).
 - A Confluent Cloud user account with permission to create environments,
   Basic Kafka clusters, service accounts, and API keys.
 - A payment method or credits if required by the organization.

@@ -14,8 +14,9 @@ fi
 
 # shellcheck disable=SC1091
 source /etc/os-release
-if [[ "${ID:-}" != "ubuntu" || "${VERSION_ID:-}" != 24.* ]]; then
-  echo "Error: this installer supports Ubuntu 24.x only; found ${PRETTY_NAME:-unknown}." >&2
+ubuntu_major="${VERSION_ID%%.*}"
+if [[ "${ID:-}" != "ubuntu" || ! "${ubuntu_major}" =~ ^[0-9]+$ || "${ubuntu_major}" -lt 22 ]]; then
+  echo "Error: this installer supports Ubuntu 22.04 or newer; found ${PRETTY_NAME:-unknown}." >&2
   exit 1
 fi
 

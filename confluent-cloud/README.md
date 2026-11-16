@@ -20,8 +20,8 @@ For a hands-on service-account RBAC exercise covering prefixed topic access,
 environment-wide administration, authorization denial, and audit logs, see
 the [Lab 5: RBAC And Audit Logs](LAB-5-RBAC-PREFIX-AND-AUDIT-LAB.md).
 
-On Ubuntu 24.x, install the CLI with
-[`install_confluent_cli_ubuntu24.sh`](install_confluent_cli_ubuntu24.sh).
+On Ubuntu 22.04 or newer, install the CLI with
+[`install_confluent_cli_ubuntu.sh`](install_confluent_cli_ubuntu.sh).
 Install Terraform with
 [`install_terraform_ubuntu24.sh`](install_terraform_ubuntu24.sh).
 

@@ -10,9 +10,9 @@ Kafka and Schema Registry API keys.
 
 Install the CLI for your operating system using the
 [official installation guide](https://docs.confluent.io/confluent-cli/current/install.html).
-For Ubuntu 24.x, this project includes
-[`install_confluent_cli_ubuntu24.sh`](install_confluent_cli_ubuntu24.sh); run it
-with `./install_confluent_cli_ubuntu24.sh` (it uses `sudo` when needed).
+For Ubuntu 22.04 or newer, this project includes
+[`install_confluent_cli_ubuntu.sh`](install_confluent_cli_ubuntu.sh); run it
+with `./install_confluent_cli_ubuntu.sh` (it uses `sudo` when needed).
 Check that it is available:
 
 ```bash
