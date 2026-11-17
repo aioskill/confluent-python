@@ -67,52 +67,32 @@ You can also pass `--environment <ENVIRONMENT_ID>` and
 `--cluster <KAFKA_CLUSTER_ID>` directly to commands that support those flags.
 The CLI stores its own context locally; it does not read this project's `.env`.
 
-## Optional: invite users and assign roles in bulk
 
-For a guided service-account exercise comparing prefixed `DeveloperRead` with
-`EnvironmentAdmin`, testing an authorization denial, and finding the audit
-events, see [Lab 5: RBAC And Audit Logs](LAB-5-RBAC-PREFIX-AND-AUDIT-LAB.md).
+Give permission to api key 
+```
+ confluent iam rbac role-binding create \
+  --principal User:sa-5m31kw8 \
+  --role DeveloperRead \
+  --environment env-qqoypp \
+  --cloud-cluster lkc-pgx3k0m \
+  --kafka-cluster lkc-pgx3k0m
 
-`invite_users.sh` sends invitations from a text file. After invitees accept
-and exist as Confluent Cloud users, `assign_roles.sh` fetches the current user
-list and assigns `OrganizationAdmin` to each user except
-`training@avalanchio.com`. This role allows users to create, manage, and delete
-environments, clusters, Schema Registry resources, and other resources across
-the organization. Use this script only in a dedicated training organization;
-it grants broad organization-wide administration rights. Existing matching
-bindings are skipped, so rerunning the script is idempotent. The script asks
-for confirmation before it creates missing role bindings.
 
-Create a file with one email address per line. Blank lines and comments are
-allowed:
+ confluent iam rbac role-binding create \
+  --principal User:sa-5m31kw8 \
+  --role DeveloperWrite \
+  --environment env-qqoypp \
+  --cloud-cluster lkc-pgx3k0m \
+  --kafka-cluster lkc-pgx3k0m
 
-```text
-# Kafka and schema administrators
-alice@example.com
-bob@example.com
 ```
 
-After `confluent login`, send invitations:
-
+Verify role
 ```bash
-./invite_users.sh users.txt
+confluent iam rbac role-binding list --principal User:sa-5m31kw8 --inclusive
 ```
 
-The CLI account needs permission to invite users. Each invitee must accept the
-invitation and exist as a Confluent Cloud user before role assignment; the
-assignment script cannot bind roles to a pending invitation.
 
-Then assign the role to all current users except the excluded super admin:
-
-```bash
-./assign_roles.sh
-```
-
-The CLI account running this script needs permission to create the
-`OrganizationAdmin` role binding. Pending invitations are not included by the
-user-list command; rerun the script after invitees accept and appear in the
-organization. Use `./assign_roles.sh --yes` to skip the confirmation prompt
-when running in a controlled automation context.
 
 ## 3. Create and inspect a topic
 
