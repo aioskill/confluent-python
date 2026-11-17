@@ -126,6 +126,12 @@ confluent environment list
 confluent environment use <ENVIRONMENT_ID>
 ```
 
+Find current environment
+```bash
+confluent environment describe
+```
+
+
 Create a single-zone Basic Kafka cluster in that environment:
 
 ```bash
