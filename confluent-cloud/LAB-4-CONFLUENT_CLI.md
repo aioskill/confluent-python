@@ -87,6 +87,14 @@ Give permission to api key
 
 ```
 
+Give permission to consumer groups 
+```bash
+  confluent iam rbac role-binding create \
+  --principal User:sa-5m31kw8 --role DeveloperRead \
+  --environment env-qqoypp --cloud-cluster lkc-pgx3k0m --kafka-cluster lkc-pgx3k0m \
+  --resource Group:demo-group*
+```
+
 Verify role
 ```bash
 confluent iam rbac role-binding list --principal User:sa-5m31kw8 --inclusive
@@ -144,7 +152,7 @@ confluent kafka topic consume cli-demo-<STUDENT_ID> \
   --cluster <KAFKA_CLUSTER_ID> \
   --api-key <KAFKA_API_KEY> \
   --api-secret <KAFKA_API_SECRET> \
-  --from-beginning
+  --from-beginning --group demo-group-1
 ```
 
 The CLI creates a temporary consumer group by default. For a repeatable group,
