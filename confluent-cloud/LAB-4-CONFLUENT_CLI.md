@@ -75,7 +75,8 @@ Give permission to api key
   --role DeveloperRead \
   --environment env-qqoypp \
   --cloud-cluster lkc-pgx3k0m \
-  --kafka-cluster lkc-pgx3k0m
+  --kafka-cluster lkc-pgx3k0m \
+  --resource Topic:cli-demo* 
 
 
  confluent iam rbac role-binding create \
@@ -83,7 +84,8 @@ Give permission to api key
   --role DeveloperWrite \
   --environment env-qqoypp \
   --cloud-cluster lkc-pgx3k0m \
-  --kafka-cluster lkc-pgx3k0m
+  --kafka-cluster lkc-pgx3k0m \
+  --resource Topic:cli-demo* 
 
 ```
 
@@ -194,6 +196,17 @@ confluent schema-registry schema list \
 Soft-deleted schemas can appear in these listings but may not be retrievable
 with `schema describe --version latest` because the subject is deleted.
 
+
+If the environment has a Schema Registry endpoint, create a separate
+Schema Registry API key. A Kafka API key cannot authenticate to Schema
+Registry:
+
+```bash
+confluent api-key create --resource <SCHEMA_REGISTRY_CLUSTER_ID>
+```
+
+
+
 ### Recover a soft-deleted schema
 
 A soft-deleted schema can be recovered by fetching its definition and
@@ -301,7 +314,7 @@ confluent kafka topic consume cli-demo-avro-<STUDENT_ID> \
   --schema-registry-endpoint <SCHEMA_REGISTRY_ENDPOINT> \
   --schema-registry-api-key <SCHEMA_REGISTRY_API_KEY> \
   --schema-registry-api-secret <SCHEMA_REGISTRY_API_SECRET> \
-  --from-beginning
+  --from-beginning --group demo-group-1
 ```
 
 Kafka topics can contain Avro records that use different Schema Registry
