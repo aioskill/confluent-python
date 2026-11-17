@@ -32,7 +32,7 @@ contains data you need.
 
 ## Prerequisites
 
-- Confluent CLI `install_confluent_cli_ubuntu.sh` and Terraform installed (use `install_terraform_ubuntu24.sh`).
+- Confluent CLI `install_confluent_cli_ubuntu.sh` and Terraform installed (use `install_terraform_ubuntu.sh`).
 - A Confluent Cloud user account with permission to create environments,
   Basic Kafka clusters, service accounts, and API keys.
 - A payment method or credits if required by the organization.
@@ -96,6 +96,25 @@ confluent service-quota list
 
 CLI login authenticates Cloud management commands. Kafka API keys created
 later are separate credentials for Kafka data-plane clients.
+
+### If your CLI session expires
+
+The CLI login token is short-lived. When a command fails with
+`Error: expired token`, log in again. To avoid repeated logins, save your
+credentials once:
+
+```bash
+confluent login --save
+```
+
+The CLI stores your email and password in `~/.confluent/netrc` (readable only
+by you) and signs in again automatically when the token expires. This works for
+accounts that sign in with a password, not for SSO. Do not use it on a shared
+machine; `confluent logout` removes the saved credentials.
+
+For automation such as Terraform, you can instead set `CONFLUENT_CLOUD_API_KEY`
+and `CONFLUENT_CLOUD_API_SECRET` (a Cloud API key, created in Step 3); it does
+not expire like a user login, but it does not cover every command.
 
 ## 2. Create an environment and Basic cluster with the CLI
 

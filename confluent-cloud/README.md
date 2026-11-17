@@ -20,10 +20,22 @@ For a hands-on service-account RBAC exercise covering prefixed topic access,
 environment-wide administration, authorization denial, and audit logs, see
 the [Lab 5: RBAC And Audit Logs](LAB-5-RBAC-PREFIX-AND-AUDIT-LAB.md).
 
+For Schema Registry compatibility, see
+[Lab 6A: Schema Registry](LAB-6A-SCHEMA-REGISTRY.md). For a fully managed
+Datagen connector and a self-managed Connect worker, see
+[Lab 6B: Managed and Self-Managed Connectors](LAB-6B-MANAGED-CONNECTORS.md)
+(it includes a managed Amazon S3 sink). For a self-managed PostgreSQL sink
+connector that runs in the lab data center, see
+[Lab 6C: PostgreSQL Sink Connector in the Data Center](LAB-6C-POSTGRES-SINK-ON-PREM.md).
+
+For a managed JDBC (PostgreSQL) source connector that reaches a private AWS RDS
+database over PrivateLink, see
+[Lab 7: JDBC Connector with PrivateLink](lab7/LAB-7-JDBC-CONNECTOR-PRIVATE-LINK.md).
+
 On Ubuntu 22.04 or newer, install the CLI with
 [`install_confluent_cli_ubuntu.sh`](install_confluent_cli_ubuntu.sh).
 Install Terraform with
-[`install_terraform_ubuntu24.sh`](install_terraform_ubuntu24.sh).
+[`install_terraform_ubuntu.sh`](install_terraform_ubuntu.sh).
 
 These scripts use Confluent Cloud's native Kafka endpoint and Schema Registry.
 They load the adjacent `.env` file automatically. Credential values are never

@@ -1,0 +1,32 @@
+#!/bin/bash
+# Runs once as root when the jump host first boots (cloud-init).
+exec > /var/log/lab7-init.log 2>&1
+dnf install -y postgresql16 bind-utils python3-pip
+pip3 install confluent-kafka
+
+export PGPASSWORD='${db_password}'
+DB="host=${db_host} port=5432 dbname=labdb user=labadmin sslmode=require"
+until psql "$DB" -c 'select 1' >/dev/null 2>&1; do sleep 10; done
+
+%{ for student, password in students ~}
+psql "$DB" <<'SQL'
+CREATE SCHEMA IF NOT EXISTS ${student};
+CREATE TABLE IF NOT EXISTS ${student}.orders (
+  id          SERIAL PRIMARY KEY,
+  customer_id TEXT NOT NULL,
+  amount      NUMERIC(10,2) NOT NULL,
+  updated_at  TIMESTAMP NOT NULL DEFAULT now()
+);
+INSERT INTO ${student}.orders (customer_id, amount)
+  SELECT * FROM (VALUES ('c-1', 12.50), ('c-2', 99.99), ('c-3', 5.00)) v
+  WHERE NOT EXISTS (SELECT 1 FROM ${student}.orders);
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '${student}_reader') THEN
+    CREATE USER ${student}_reader WITH PASSWORD '${password}';
+  END IF;
+END $$;
+GRANT USAGE ON SCHEMA ${student} TO ${student}_reader;
+GRANT SELECT ON ${student}.orders TO ${student}_reader;
+SQL
+%{ endfor ~}
+touch /var/log/lab7-seeded
