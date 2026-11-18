@@ -152,6 +152,14 @@ Save the key and secret (`<SCHEMA_REGISTRY_API_KEY>`,
 `<SCHEMA_REGISTRY_API_SECRET>`); the secret is shown only once. The Schema
 Registry subject commands in this lab use your CLI login.
 
+
+Install aws cli 
+```bash
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+```
+
 For step 2, the class S3 credentials file contains `s3_bucket`, `aws_region`,
 `aws_access_key_id` and `aws_secret_access_key`. Store them in a named AWS CLI
 profile, so that they do not replace your other AWS settings:

@@ -29,3 +29,7 @@ confluent api-key create \
   --cloud-cluster $CLUSTER_ID \
   --kafka-cluster $CLUSTER_ID \
   --resource Topic:cli-demo* 
+
+confluent api-key create --resource $CLUSTER_ID \
+--service-account $SERVICE_ACCOUNT_ID \
+--description "API key for $ENV_ID"
