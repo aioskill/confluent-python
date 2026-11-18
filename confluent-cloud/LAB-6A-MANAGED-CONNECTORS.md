@@ -143,6 +143,8 @@ confluent schema-registry cluster describe
 ```
 
 Create your own Schema Registry key for the consume command in step 1:
+You can get SCHEMA_REGISTRY_CLUSTER_ID, and SCHEMA_REGISTRY_URL in the output of 
+`confluent schema-registry cluster describe`
 
 ```bash
 confluent api-key create --resource <SCHEMA_REGISTRY_CLUSTER_ID>
@@ -232,6 +234,12 @@ confluent connect cluster describe <CONNECTOR_ID>
 Provisioning takes a few minutes. When it is running, read some records. The
 consumer needs both key pairs because the values are Avro:
 
+Get the schema registry endpoint:
+```bash
+confluent schema-registry cluster describe 
+```
+
+
 ```bash
 confluent kafka topic consume datagen-orders-<STUDENT_ID> \
   --group datagen-reader-<STUDENT_ID> \
@@ -239,6 +247,7 @@ confluent kafka topic consume datagen-orders-<STUDENT_ID> \
   --api-key <KAFKA_API_KEY> \
   --api-secret <KAFKA_API_SECRET> \
   --value-format avro \
+  --schema-registry-endpoint <SCHEMA_REGISTRY_URL> \
   --schema-registry-api-key <SCHEMA_REGISTRY_API_KEY> \
   --schema-registry-api-secret <SCHEMA_REGISTRY_API_SECRET>
 ```

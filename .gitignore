@@ -78,3 +78,4 @@ wolfctl-*.yml
 **/*.tfstate.*
 AGENTS.md
 
+confluent-cloud/lab6a/datagen-orders.json
