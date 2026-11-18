@@ -24,8 +24,8 @@ Schema Registry compatibility is covered in Lab 4. For a fully managed
 Datagen connector and a self-managed Connect worker, see
 [Lab 6A: Managed and Self-Managed Connectors](LAB-6A-MANAGED-CONNECTORS.md)
 (it includes a managed Amazon S3 sink). For a self-managed PostgreSQL sink
-connector that runs in the lab data center, see
-[Lab 6B: PostgreSQL Sink Connector in the Data Center](LAB-6B-POSTGRES-SINK-ON-PREM.md).
+connector that runs on your own VM, see
+[Lab 6B: PostgreSQL Sink Connector on Your Own VM](LAB-6B-POSTGRES-SINK-ON-PREM.md).
 For Tableflow, which turns a Kafka topic into an Iceberg table that you read without
 Kafka, see [Lab 8: Tableflow](LAB-8-TABLEFLOW.md).
 
