@@ -1,8 +1,8 @@
 # Lab 6B: PostgreSQL Sink Connector in the Data Center
 
 In this lab the Kafka cluster is in Confluent Cloud, but the database and the
-connector are in your own data center (the lab hosts `sa01` to `sa03`). You
-produce Avro records to a Cloud topic, run a Kafka Connect worker on a lab host
+connector are in your own data center (the lab host `sa01`). You
+produce Avro records to a Cloud topic, run a Kafka Connect worker on `sa01`
 that reads the topic, and the JDBC sink connector writes the records to a
 PostgreSQL database on `sa01`. Nothing connects *into* the data center: the
 worker makes outbound connections to Confluent Cloud, which is why this pattern
@@ -12,8 +12,8 @@ connectors and PrivateLink instead).
 ```
  Confluent Cloud                              Lab hosts (data center)
 +---------------------------+   outbound   +-----------------------------------+
-| Kafka topic               | <----------- | Connect worker  (sa01, sa02 or    |
-|   pg-orders-<STUDENT_ID>  |   TLS 9092   |   sa03: JDBC sink connector)      |
+| Kafka topic               | <----------- | Connect worker on sa01            |
+|   pg-orders-<STUDENT_ID>  |   TLS 9092   |   (JDBC sink connector)           |
 | Schema Registry           | <----------- |        |                          |
 +---------------------------+   HTTPS 443  |        v  JDBC, port 5432         |
                                            | PostgreSQL on sa01, database      |
@@ -30,7 +30,7 @@ can do it on its own.
 ## Learning objectives
 
 - Explain when to run a sink connector yourself instead of using a managed one.
-- Configure a Connect worker on a lab host to use Confluent Cloud and Cloud
+- Configure a Connect worker on `sa01` to use Confluent Cloud and Cloud
   Schema Registry.
 - Run the JDBC sink connector so that Avro records become rows in PostgreSQL,
   and see how `upsert` and `auto.evolve` behave.
@@ -40,32 +40,33 @@ can do it on its own.
 - Confluent CLI installed and logged in (`confluent login`).
 - The shared environment and cluster, and the class Kafka credentials file from the
   instructor (`kafka_api_key`, `kafka_api_secret`), the same one as in Lab 6A.
-- SSH access to the lab host assigned to you (`<LAB_HOST>`: `sa01`, `sa02`, or
-  `sa03`) and a worker port (`<WORKER_PORT>`, for example 8091 plus your student
-  number) so that workers on a shared host do not collide.
+- SSH access to your own `sa01` (`ssh ubuntu@sa01`). Each student has a separate set of
+  lab hosts, so nothing on `sa01` is shared with other students.
 - The `confluent-cloud` directory of this repository as your working directory
   (it contains `order.avsc`).
 
 ### Instructor setup
 
-The setup script runs **on the lab hosts** (it does not use `ssh`). Copy it to each
-host and run it there, on `sa01` first:
+Everything for this lab is on `sa01`: PostgreSQL, the `psql` client and the JDBC connector
+plugin (installed only there). The setup script runs **on `sa01`** and does not use `ssh`.
+Copy it over and run it:
 
 ```bash
-for h in sa01 sa02 sa03; do
-  scp lab6b_setup.sh ubuntu@$h:
-  ssh ubuntu@$h 'bash lab6b_setup.sh init'
-done
+scp lab6b_setup.sh ubuntu@sa01:
+ssh ubuntu@sa01 'bash lab6b_setup.sh init'
 ```
 
-On every host, `init` installs the `psql` client and the Confluent JDBC connector plugin
-(`confluent-hub install confluentinc/kafka-connect-jdbc`) under
-`/app/confluent/share/confluent-hub-components`. On `sa01` it also installs PostgreSQL
-(bound to its lab-network address, `192.168.120.11`, and to localhost, not to every interface) and creates the database `lab6b` with the login `lab6b`
-(password `lab6b-pass`) as its owner. It is safe to run again. All students use this one
-database login, so there is nothing to create per student. After class, run
-`bash lab6b_setup.sh delete` on `sa01` to drop the database and the login. Each worker is a
-Java process of roughly 300 MB, so spread students over the three hosts.
+`init` installs PostgreSQL (bound to its lab-network address, `192.168.120.11`, and to
+localhost, not to every interface), creates the database `lab6b` with the login `lab6b`
+(password `lab6b-pass`) as its owner, and installs the `psql` client and the Confluent JDBC
+connector plugin (`confluent-hub install confluentinc/kafka-connect-jdbc`) under
+`/app/confluent/share/confluent-hub-components`. It is safe to run again. All students use this
+one database login, so there is nothing to create per student. After class, run
+`bash lab6b_setup.sh delete` on `sa01` to drop the database and the login.
+
+Each student has their own `sa01`, so every student runs this setup once on their own
+host (or the instructor does it on each). Nothing is shared between students on the lab
+hosts; only the Confluent Cloud cluster, the service account and the Kafka key are shared.
 
 The Kafka side uses the class service account from
 [Lab 6A](LAB-6A-MANAGED-CONNECTORS.md#instructor-setup-kafka-access-once), which
@@ -82,26 +83,27 @@ confluent kafka acl create --allow --service-account <SERVICE_ACCOUNT_ID> \
 
 ### Instructor: common tasks
 
-Run the `ssh` commands from the instructor workstation, logged in to the Confluent CLI
-as the administrator.
+**On the student's `sa01`** (`ssh ubuntu@sa01`):
 
 | Task | Command |
 |---|---|
-| Before class: prepare PostgreSQL and the JDBC plugin (safe to repeat) | On each host: `bash lab6b_setup.sh init` (see above) |
-| Check the database is reachable from a lab host | `ssh ubuntu@sa02 'psql "host=sa01 dbname=lab6b user=lab6b password=lab6b-pass" -c "select 1"'` |
-| Check the JDBC plugin is installed on a host | `ssh ubuntu@sa02 'ls /app/confluent/share/confluent-hub-components'` (expect `confluentinc-kafka-connect-jdbc`) |
-| Assign hosts and worker ports | Give student number *n* the host `sa0(1 + n % 3)` and port `8090 + n`. Ports only need to be unique per host. |
-| See which tables exist | `ssh ubuntu@sa01 'psql "host=sa01 dbname=lab6b user=lab6b password=lab6b-pass" -c "\dt"'` (use `\dt` to list all students' tables) |
-| See running workers | `ssh ubuntu@sa02 'pgrep -af connect-standalone'` |
-| Stop a stuck worker | `ssh ubuntu@sa02 'pkill -f connect-standalone'` |
-| Reset one student's table | `ssh ubuntu@sa01 'psql "host=sa01 dbname=lab6b user=lab6b password=lab6b-pass" -c "drop table orders_<STUDENT_ID>"'` (stop the student's worker first; it re-creates the table when started again and the topic is replayed only if its offsets file is removed) |
+| Prepare PostgreSQL and the JDBC plugin (safe to repeat) | `bash lab6b_setup.sh init` (see above) |
+| Check the database is reachable | `psql "host=sa01 dbname=lab6b user=lab6b password=lab6b-pass" -c "select 1"` |
+| Check the JDBC plugin is installed | `ls /app/confluent/share/confluent-hub-components` (expect `confluentinc-kafka-connect-jdbc`) |
+| See which tables exist | `psql "host=sa01 dbname=lab6b user=lab6b password=lab6b-pass" -c "\dt"` |
+| See the running worker | `pgrep -af connect-standalone` |
+| Stop a stuck worker | `pkill -f connect-standalone` |
+| Reset the table | Stop the worker, then `psql "host=sa01 dbname=lab6b user=lab6b password=lab6b-pass" -c "drop table orders"` and `rm -f ~/sink.offsets` (so the topic is replayed); start the worker again and it re-creates the table |
+| After class: remove the database | `bash lab6b_setup.sh delete` |
+
+**On the instructor workstation** (Confluent CLI logged in as the administrator; `sa01` does not
+have the CLI):
+
+| Task | Command |
+|---|---|
 | Read a student's consumer-group lag | `confluent kafka consumer group lag summarize connect-pg-sink-<STUDENT_ID> --cluster <KAFKA_CLUSTER_ID>` |
 | Rotate the shared Kafka key | `confluent api-key create --resource <KAFKA_CLUSTER_ID> --service-account <SERVICE_ACCOUNT_ID>`, hand it out, then `confluent api-key delete <OLD_KEY>` |
 | After class: remove student topics and subjects | For each student: `confluent kafka topic delete pg-orders-<STUDENT_ID> --force`, then `confluent schema-registry schema delete --subject pg-orders-<STUDENT_ID>-value --version all --force`, then the same with `--permanent` |
-| After class: remove the database | On `sa01`: `bash lab6b_setup.sh delete` |
-
-Each student's rows go to their own table, `orders_<STUDENT_ID>`, so students
-cannot overwrite each other's data even though they share one database login.
 
 ### Student setup
 
@@ -123,12 +125,12 @@ Registry key from Lab 6A, create one (the secret is shown only once):
 confluent api-key create --resource <SCHEMA_REGISTRY_CLUSTER_ID>
 ```
 
-Finally, check from your lab host that the database is reachable (expect a
+Finally, check from `sa01` that the database is reachable (expect a
 single row with the value `1`). If this fails, tell the instructor before you
 continue:
 
 ```bash
-ssh ubuntu@<LAB_HOST> 'psql "host=sa01 dbname=lab6b user=lab6b password=lab6b-pass" -c "select 1"'
+ssh ubuntu@sa01 'psql "host=sa01 dbname=lab6b user=lab6b password=lab6b-pass" -c "select 1"'
 ```
 
 ## 1. Produce Avro records to a Cloud topic
@@ -153,11 +155,11 @@ confluent kafka topic produce pg-orders-<STUDENT_ID> \
 
 ## 2. Configure the Connect worker
 
-Log in to your lab host (`ssh ubuntu@<LAB_HOST>`) and create the worker
+Log in to `sa01` (`ssh ubuntu@sa01`) and create the worker
 configuration. It contains the Cloud keys, so restrict its permissions first:
 
 ```bash
-install -m 600 /dev/null ~/sink-worker-<STUDENT_ID>.properties
+install -m 600 /dev/null ~/sink-worker.properties
 ```
 
 Edit it to contain the following. A *standalone* worker is one process that runs
@@ -184,10 +186,10 @@ value.converter.schema.registry.url=<SCHEMA_REGISTRY_URL>
 value.converter.basic.auth.credentials.source=USER_INFO
 value.converter.basic.auth.user.info=<SCHEMA_REGISTRY_API_KEY>:<SCHEMA_REGISTRY_API_SECRET>
 
-offset.storage.file.filename=/home/ubuntu/sink-<STUDENT_ID>.offsets
+offset.storage.file.filename=/home/ubuntu/sink.offsets
 plugin.path=/app/confluent/share/confluent-hub-components
 plugin.discovery=service_load
-listeners=http://localhost:<WORKER_PORT>
+listeners=http://localhost:8083
 ```
 
 `value.converter` is what turns the Avro bytes in the topic back into records
@@ -199,11 +201,11 @@ needs much more memory than the 300 MB heap used below (it fails with
 `OutOfMemoryError`), because the JDBC plugin also bundles drivers for other
 databases.
 
-Now the connector. Create `pg-sink-<STUDENT_ID>.properties` (it holds the
+Now the connector. Create `pg-sink.properties` (it holds the
 database password, so restrict it too):
 
 ```bash
-install -m 600 /dev/null ~/pg-sink-<STUDENT_ID>.properties
+install -m 600 /dev/null ~/pg-sink.properties
 ```
 
 ```properties
@@ -214,7 +216,7 @@ topics=pg-orders-<STUDENT_ID>
 connection.url=jdbc:postgresql://sa01:5432/lab6b
 connection.user=lab6b
 connection.password=lab6b-pass
-table.name.format=orders_<STUDENT_ID>
+table.name.format=orders
 insert.mode=upsert
 pk.mode=record_value
 pk.fields=order_id
@@ -222,9 +224,8 @@ auto.create=true
 auto.evolve=true
 ```
 
-- `table.name.format=orders_<STUDENT_ID>` is your own table, created in the
-  `public` schema of the database `lab6b` (all students share this database and
-  login, so each needs a different table).
+- `table.name.format=orders` is the table the connector creates in the `public`
+  schema of the database `lab6b` on your `sa01`.
 - `insert.mode=upsert` with `pk.fields=order_id` means a record with an existing
   `order_id` updates the row instead of adding one.
 - `auto.create` creates the table from the Avro schema; `auto.evolve` adds
@@ -234,25 +235,25 @@ auto.evolve=true
 
 ## 3. Run the worker and check the table
 
-Start the worker in the foreground with a small heap (the lab hosts are shared).
+Start the worker in the foreground with a small heap (`sa01` is shared).
 It prints a lot while it starts; wait about 30 seconds until it stops scrolling:
 
 ```bash
 KAFKA_HEAP_OPTS="-Xms64m -Xmx300m" /app/confluent/bin/connect-standalone \
-  ~/sink-worker-<STUDENT_ID>.properties ~/pg-sink-<STUDENT_ID>.properties
+  ~/sink-worker.properties ~/pg-sink.properties
 ```
 
-In a second terminal on the same host, check the connector through the worker's
+In a second terminal on `sa01`, check the connector through the worker's
 REST API and read your table with `psql`:
 
 ```bash
-curl -s http://localhost:<WORKER_PORT>/connectors/pg-sink-<STUDENT_ID>/status
+curl -s http://localhost:8083/connectors/pg-sink-<STUDENT_ID>/status
 
 psql "host=sa01 dbname=lab6b user=lab6b password=lab6b-pass" \
-  -c '\dt' -c 'select * from orders_<STUDENT_ID> order by order_id'
+  -c '\dt' -c 'select * from orders order by order_id'
 ```
 
-Expected: the connector and task are `RUNNING`, the table `orders_<STUDENT_ID>` exists, and it has the three rows. The column types come from the
+Expected: the connector and task are `RUNNING`, the table `orders` exists, and it has the three rows. The column types come from the
 Avro schema: `amount` is `double precision`, the others `text`.
 
 ## 4. Upserts and schema evolution
@@ -271,7 +272,7 @@ confluent kafka topic produce pg-orders-<STUDENT_ID> \
   --schema-registry-api-secret <SCHEMA_REGISTRY_API_SECRET>
 ```
 
-Run the `select` again on the lab host. Expected: four rows, `o-2` is now
+Run the `select` again on `sa01`. Expected: four rows, `o-2` is now
 `SHIPPED` (updated, not duplicated), and `o-4` is new.
 
 Now evolve the schema by adding an optional field with a default (a backward
@@ -303,7 +304,7 @@ confluent kafka topic produce pg-orders-<STUDENT_ID> \
   --schema-registry-api-secret <SCHEMA_REGISTRY_API_SECRET>
 ```
 
-On the lab host run `select * from orders_<STUDENT_ID> order by order_id` once more.
+On `sa01` run `select * from orders order by order_id` once more.
 Expected: a new nullable column `coupon`, empty for `o-1` to `o-4` and `SPRING`
 for `o-5`. The `ALTER TABLE` was issued by the connector because of
 `auto.evolve=true`; without it the record would fail and the task would stop.
@@ -321,12 +322,12 @@ Questions to answer from what you saw:
 
 ## Cleanup
 
-Stop the worker with `Ctrl-C`, then on the lab host remove the files that
+Stop the worker with `Ctrl-C`, then on `sa01` remove the files that
 contain keys and the table:
 
 ```bash
-psql "host=sa01 dbname=lab6b user=lab6b password=lab6b-pass" -c 'drop table orders_<STUDENT_ID>'
-rm -f ~/sink-worker-<STUDENT_ID>.properties ~/pg-sink-<STUDENT_ID>.properties ~/sink-<STUDENT_ID>.offsets
+psql "host=sa01 dbname=lab6b user=lab6b password=lab6b-pass" -c 'drop table orders'
+rm -f ~/sink-worker.properties ~/pg-sink.properties ~/sink.offsets
 ```
 
 From your workstation, delete the topic and the schema subject (first softly and
