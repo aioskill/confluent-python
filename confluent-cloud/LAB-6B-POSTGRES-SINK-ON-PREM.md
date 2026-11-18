@@ -48,21 +48,24 @@ can do it on its own.
 
 ### Instructor setup
 
-Once, from a workstation with passwordless `ssh ubuntu@sa0N` and `sudo`, run:
+The setup script runs **on the lab hosts** (it does not use `ssh`). Copy it to each
+host and run it there, on `sa01` first:
 
 ```bash
-./lab6b_setup.sh init
+for h in sa01 sa02 sa03; do
+  scp lab6b_setup.sh ubuntu@$h:
+  ssh ubuntu@$h 'bash lab6b_setup.sh init'
+done
 ```
 
-It installs PostgreSQL on `sa01` (listening on the lab network only), creates the
-database `lab6b` with the login `lab6b` (password `lab6b-pass`) as its owner, and
-installs the `psql` client and the Confluent JDBC connector plugin
+On every host, `init` installs the `psql` client and the Confluent JDBC connector plugin
 (`confluent-hub install confluentinc/kafka-connect-jdbc`) under
-`/app/confluent/share/confluent-hub-components` on `sa01`, `sa02`, and `sa03`.
-All students use this one database login, so there is nothing to create per
-student. After class, `./lab6b_setup.sh delete` drops the database and the login.
-Each worker is a Java process of roughly 300 MB, so spread students over the three
-hosts.
+`/app/confluent/share/confluent-hub-components`. On `sa01` it also installs PostgreSQL
+(bound to its lab-network address, `192.168.120.11`, and to localhost, not to every interface) and creates the database `lab6b` with the login `lab6b`
+(password `lab6b-pass`) as its owner. It is safe to run again. All students use this one
+database login, so there is nothing to create per student. After class, run
+`bash lab6b_setup.sh delete` on `sa01` to drop the database and the login. Each worker is a
+Java process of roughly 300 MB, so spread students over the three hosts.
 
 The Kafka side uses the class service account from
 [Lab 6A](LAB-6A-MANAGED-CONNECTORS.md#instructor-setup-kafka-access-once), which
@@ -79,12 +82,12 @@ confluent kafka acl create --allow --service-account <SERVICE_ACCOUNT_ID> \
 
 ### Instructor: common tasks
 
-All commands run from this directory on the instructor workstation, logged in to
-the Confluent CLI as the administrator.
+Run the `ssh` commands from the instructor workstation, logged in to the Confluent CLI
+as the administrator.
 
 | Task | Command |
 |---|---|
-| Before class: prepare PostgreSQL and the JDBC plugin (safe to repeat) | `./lab6b_setup.sh init` |
+| Before class: prepare PostgreSQL and the JDBC plugin (safe to repeat) | On each host: `bash lab6b_setup.sh init` (see above) |
 | Check the database is reachable from a lab host | `ssh ubuntu@sa02 'psql "host=sa01 dbname=lab6b user=lab6b password=lab6b-pass" -c "select 1"'` |
 | Check the JDBC plugin is installed on a host | `ssh ubuntu@sa02 'ls /app/confluent/share/confluent-hub-components'` (expect `confluentinc-kafka-connect-jdbc`) |
 | Assign hosts and worker ports | Give student number *n* the host `sa0(1 + n % 3)` and port `8090 + n`. Ports only need to be unique per host. |
@@ -95,7 +98,7 @@ the Confluent CLI as the administrator.
 | Read a student's consumer-group lag | `confluent kafka consumer group lag summarize connect-pg-sink-<STUDENT_ID> --cluster <KAFKA_CLUSTER_ID>` |
 | Rotate the shared Kafka key | `confluent api-key create --resource <KAFKA_CLUSTER_ID> --service-account <SERVICE_ACCOUNT_ID>`, hand it out, then `confluent api-key delete <OLD_KEY>` |
 | After class: remove student topics and subjects | For each student: `confluent kafka topic delete pg-orders-<STUDENT_ID> --force`, then `confluent schema-registry schema delete --subject pg-orders-<STUDENT_ID>-value --version all --force`, then the same with `--permanent` |
-| After class: remove the database | `./lab6b_setup.sh delete` |
+| After class: remove the database | On `sa01`: `bash lab6b_setup.sh delete` |
 
 Each student's rows go to their own table, `orders_<STUDENT_ID>`, so students
 cannot overwrite each other's data even though they share one database login.

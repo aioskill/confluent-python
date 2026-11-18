@@ -79,3 +79,4 @@ wolfctl-*.yml
 AGENTS.md
 
 confluent-cloud/lab6a/datagen-orders.json
+confluent-cloud/lab6a/s3-sink.json
