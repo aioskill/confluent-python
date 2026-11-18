@@ -535,6 +535,78 @@ See the official
 and [Schema Registry schema commands](https://docs.confluent.io/confluent-cli/current/command-reference/schema-registry/schema/index.html)
 references for all flags and formats (Avro, JSON Schema, and Protobuf).
 
+### Several formats in one topic (proof of concept)
+
+This is optional and **not** a recommended design. The lab topics above each hold
+one format, which is what consumers, sink connectors and Tableflow expect. A topic
+itself is only bytes, though, so Avro, Protobuf and JSON Schema records can share one.
+
+Two things must change from the defaults:
+
+- By default a record's schema is registered under the subject `<topic>-value`, and one
+  subject holds one schema type. To mix formats, each record type needs its own subject.
+  The *TopicRecordNameStrategy* names it `<topic>-<record name>`, so the three formats must
+  also use three different record names. The CLI producer cannot choose a naming strategy, so
+  this uses a Python script, `mixed_formats_poc.py`, which sets
+  `subject.name.strategy` on each serializer.
+- A consumer cannot assume a format. Every record starts with the magic byte `0` and a 4-byte
+  schema ID. The reader looks the ID up in Schema Registry, which returns the schema type
+  (`AVRO`, `PROTOBUF` or `JSON`), and picks the matching deserializer.
+
+Install the client libraries once, if you do not have them:
+`pip install "confluent-kafka[avro,json,protobuf,schemaregistry]" python-dotenv`. The script reads
+`.env` for the Cloud settings, like the other scripts in this directory. Create the topic
+and produce two records of each format, then read them back:
+
+```bash
+confluent kafka topic create mixed-poc-<STUDENT_ID> --partitions 1
+python mixed_formats_poc.py produce mixed-poc-<STUDENT_ID>
+python mixed_formats_poc.py consume mixed-poc-<STUDENT_ID>
+```
+
+Expected output (schema IDs differ in your registry). Three subjects were created, one per
+record type, and the six records come back in the order they were written, each decoded
+with the right deserializer:
+
+```text
+delivery errors: none
+subjects: ['mixed-poc-<STUDENT_ID>-OrderJson', 'mixed-poc-<STUDENT_ID>-com.example.confluent.Order', 'mixed-poc-<STUDENT_ID>-com.example.confluent.OrderAvro']
+offset=0 key=avro-1   schema_id=100018 format=AVRO     value={'order_id': 'order-1', 'customer_id': 'customer-2', 'amount': 12.5, 'status': 'CREATED'}
+offset=1 key=proto-1  schema_id=100019 format=PROTOBUF value={'order_id': 'order-11', 'customer_id': 'customer-3', 'amount': 137.5, 'status': 'CREATED'}
+offset=2 key=json-1   schema_id=100020 format=JSON     value={'order_id': 'order-21', 'customer_id': 'customer-1', 'amount': 262.5, 'status': 'CREATED'}
+...
+read 6 records
+```
+
+Library messages that start with `%6|` (librdkafka telemetry) can be ignored.
+
+Now see why the naming strategy matters. This run uses the default strategy against
+the same topic, so every format would use `mixed-poc-<STUDENT_ID>-value`:
+
+```bash
+python mixed_formats_poc.py default mixed-poc-<STUDENT_ID>
+```
+
+Expected: the Avro record registers `mixed-poc-<STUDENT_ID>-value`, and the Protobuf one is
+then rejected, because a subject holds one schema type:
+
+```text
+Failed: SchemaRegistryError: Schema being registered is incompatible with an earlier schema for subject "mixed-poc-<STUDENT_ID>-value", details: [{errorType:"DIFFERENT_SCHEMA_TYPE", ...}]; error code: 40901 (HTTP status code 409, SR code 40901)
+```
+
+That run also leaves the subject `mixed-poc-<STUDENT_ID>-value` behind, so clean up four subjects, not three.
+
+Clean up: delete the topic and the subjects (soft, then permanent):
+
+```bash
+confluent kafka topic delete mixed-poc-<STUDENT_ID> --force
+confluent schema-registry subject list
+```
+
+For each subject starting with `mixed-poc-<STUDENT_ID>-`, run
+`confluent schema-registry schema delete --subject <SUBJECT> --version all --force`,
+then the same command with `--permanent`.
+
 ## 6. Clean up
 
 Delete only the tutorial topics and schema subject if you no longer need
