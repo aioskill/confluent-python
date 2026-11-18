@@ -1,12 +1,12 @@
 # ---------------------------------------------------------------------------
-# versions.tf - providers for the INSTRUCTOR-ONLY AWS setup of Lab 6B
+# versions.tf - providers for the INSTRUCTOR-ONLY AWS setup of Lab 6A
 #
 # Run this configuration once, as an AWS administrator. It creates the S3 bucket
-# that the managed S3 Sink connector writes to, and one IAM user per student who
-# can write only under their own prefix of that bucket. Students never run it.
+# that the managed S3 Sink connector writes to, and one IAM user, shared by the
+# class, that can write only in the lab folders of that bucket. Students never run it.
 #
-#   aws    -> S3 bucket, IAM users, policies, access keys
-#   local  -> one credentials file per student (git-ignored)
+#   aws    -> S3 bucket, IAM user, policy, access keys
+#   local  -> one credentials file for the class (git-ignored)
 # ---------------------------------------------------------------------------
 
 terraform {

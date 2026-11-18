@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# Instructor script for Labs 6A and 6B: give one student a service account whose Kafka
-# permissions are limited to resources whose names start with "<STUDENT_ID>-".
+# Instructor script for Labs 6A, 6B and 8: give one student a service account whose Kafka
+# permissions are limited to resources whose names start with "<STUDENT_ID>-" (Lab
+# 6B) or are the exact Lab 6A and Lab 8 names that end with "-<STUDENT_ID>".
 #
 # Usage:
 #   ./lab6_setup_student.sh create <STUDENT_ID> <ENVIRONMENT_ID> <KAFKA_CLUSTER_ID>
@@ -14,7 +15,7 @@
 set -euo pipefail
 
 if [[ $# -ne 4 ]] || [[ "$1" != "create" && "$1" != "delete" ]]; then
-  sed -n '2,12p' "$0" >&2
+  sed -n '2,13p' "$0" >&2
   exit 2
 fi
 
@@ -70,7 +71,20 @@ acl() {
   confluent kafka acl "$verb" --allow --service-account "$sa" "${common[@]}" "${force[@]}" \
     --operations read,describe,delete \
     --consumer-group "connect-lcc-" --prefix
-  # A self-managed *standalone* sink worker (Lab 6C) reads with the group
+  # Lab 6A names end with the student id ("datagen-orders-<id>"). Kafka ACLs match
+  # only an exact name or a prefix, never a suffix, so grant each name exactly.
+  local t g
+  for t in datagen-orders s3-sink-dlq onprem-orders connect-configs connect-offsets connect-status tableflow-orders; do
+    confluent kafka acl "$verb" --allow --service-account "$sa" "${common[@]}" "${force[@]}" \
+      --operations read,write,create,describe,describe-configs,alter-configs,delete \
+      --topic "${t}-${student}"
+  done
+  for g in datagen-reader mirror-reader connect; do
+    confluent kafka acl "$verb" --allow --service-account "$sa" "${common[@]}" "${force[@]}" \
+      --operations read,describe,delete \
+      --consumer-group "${g}-${student}"
+  done
+  # A self-managed *standalone* sink worker (Lab 6B) reads with the group
   # "connect-<connector name>", and the connector name starts with "<student>-".
   confluent kafka acl "$verb" --allow --service-account "$sa" "${common[@]}" "${force[@]}" \
     --operations read,describe,delete \

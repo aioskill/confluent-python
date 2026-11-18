@@ -2,8 +2,8 @@
 # s3.tf - the shared bucket
 #
 # One bucket for the whole class. Each student's connector writes under the
-# prefix "<student id>/", so students share the bucket but not each other's data
-# (the IAM policies in iam.tf enforce that).
+# folder "s3sink-<student id>/". Students share the bucket and the IAM user
+# (iam.tf), so the folders separate their data by convention, not by permission.
 #
 # Manual equivalent: aws s3api create-bucket / put-public-access-block /
 # put-bucket-encryption / put-bucket-lifecycle-configuration.
@@ -13,7 +13,7 @@ data "aws_caller_identity" "me" {}
 
 locals {
   # Bucket names are global across all AWS accounts, so include the account ID.
-  bucket = "lab6b-s3-${data.aws_caller_identity.me.account_id}-${var.region}"
+  bucket = "lab6a-s3-${data.aws_caller_identity.me.account_id}-${var.region}"
 }
 
 resource "aws_s3_bucket" "lab" {

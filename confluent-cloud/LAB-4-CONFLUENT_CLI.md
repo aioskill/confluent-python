@@ -67,24 +67,26 @@ You can also pass `--environment <ENVIRONMENT_ID>` and
 `--cluster <KAFKA_CLUSTER_ID>` directly to commands that support those flags.
 The CLI stores its own context locally; it does not read this project's `.env`.
 
+Give the service account that owns your API key permission to read and write
+the demo topics (`<SERVICE_ACCOUNT_ID>` starts with `sa-`; `confluent iam
+service-account list` shows it):
 
-Give permission to api key 
 ```
  confluent iam rbac role-binding create \
-  --principal User:sa-5m31kw8 \
+  --principal User:<SERVICE_ACCOUNT_ID> \
   --role DeveloperRead \
-  --environment env-qqoypp \
-  --cloud-cluster lkc-pgx3k0m \
-  --kafka-cluster lkc-pgx3k0m \
+  --environment <ENVIRONMENT_ID> \
+  --cloud-cluster <KAFKA_CLUSTER_ID> \
+  --kafka-cluster <KAFKA_CLUSTER_ID> \
   --resource Topic:cli-demo* 
 
 
  confluent iam rbac role-binding create \
-  --principal User:sa-5m31kw8 \
+  --principal User:<SERVICE_ACCOUNT_ID> \
   --role DeveloperWrite \
-  --environment env-qqoypp \
-  --cloud-cluster lkc-pgx3k0m \
-  --kafka-cluster lkc-pgx3k0m \
+  --environment <ENVIRONMENT_ID> \
+  --cloud-cluster <KAFKA_CLUSTER_ID> \
+  --kafka-cluster <KAFKA_CLUSTER_ID> \
   --resource Topic:cli-demo* 
 
 ```
@@ -92,14 +94,14 @@ Give permission to api key
 Give permission to consumer groups 
 ```bash
   confluent iam rbac role-binding create \
-  --principal User:sa-5m31kw8 --role DeveloperRead \
-  --environment env-qqoypp --cloud-cluster lkc-pgx3k0m --kafka-cluster lkc-pgx3k0m \
+  --principal User:<SERVICE_ACCOUNT_ID> --role DeveloperRead \
+  --environment <ENVIRONMENT_ID> --cloud-cluster <KAFKA_CLUSTER_ID> --kafka-cluster <KAFKA_CLUSTER_ID> \
   --resource Group:demo-group*
 ```
 
 Verify role
 ```bash
-confluent iam rbac role-binding list --principal User:sa-5m31kw8 --inclusive
+confluent iam rbac role-binding list --principal User:<SERVICE_ACCOUNT_ID> --inclusive
 ```
 
 
@@ -331,6 +333,202 @@ same topic name for both commands:
 confluent kafka topic create cli-demo-avro-clean-<STUDENT_ID> --partitions 1
 ```
 
+### Compatibility and schema evolution
+
+Schema Registry can refuse a schema change that would break existing readers.
+The rule is the subject's *compatibility mode*. `BACKWARD` means a consumer
+using the new schema can still read data written with the previous schema. It
+is the default, but setting it on the subject makes the rule visible and
+independent of the global setting:
+
+```bash
+confluent schema-registry subject update cli-demo-avro-<STUDENT_ID>-value \
+  --compatibility backward
+
+confluent schema-registry configuration describe \
+  --subject cli-demo-avro-<STUDENT_ID>-value
+```
+
+Make a compatible change: add an optional field with a default. Create
+`order_v2.avsc`:
+
+```json
+{
+  "type": "record",
+  "name": "Order",
+  "namespace": "com.example.confluent",
+  "fields": [
+    {"name": "order_id", "type": "string"},
+    {"name": "customer_id", "type": "string"},
+    {"name": "amount", "type": "double"},
+    {"name": "status", "type": "string"},
+    {"name": "coupon", "type": ["null", "string"], "default": null}
+  ]
+}
+```
+
+Check it against the latest version, register it, and list the versions:
+
+```bash
+confluent schema-registry schema compatibility validate order_v2.avsc \
+  --type avro \
+  --subject cli-demo-avro-<STUDENT_ID>-value \
+  --version latest
+
+confluent schema-registry schema create \
+  --subject cli-demo-avro-<STUDENT_ID>-value \
+  --schema order_v2.avsc \
+  --type avro
+
+confluent schema-registry subject describe cli-demo-avro-<STUDENT_ID>-value
+```
+
+Expected: the validation reports the schema is compatible, and the subject now
+has versions 1 and 2. Old records (without `coupon`) can still be read with
+version 2, because the missing field takes its default.
+
+Now try a breaking change. Create `order_breaking.avsc`. It adds a required
+field with no default and changes the type of `amount`:
+
+```json
+{
+  "type": "record",
+  "name": "Order",
+  "namespace": "com.example.confluent",
+  "fields": [
+    {"name": "order_id", "type": "string"},
+    {"name": "customer_id", "type": "string"},
+    {"name": "amount", "type": "string"},
+    {"name": "status", "type": "string"},
+    {"name": "coupon", "type": ["null", "string"], "default": null},
+    {"name": "region", "type": "string"}
+  ]
+}
+```
+
+```bash
+confluent schema-registry schema compatibility validate order_breaking.avsc \
+  --type avro \
+  --subject cli-demo-avro-<STUDENT_ID>-value \
+  --version latest
+
+confluent schema-registry schema create \
+  --subject cli-demo-avro-<STUDENT_ID>-value \
+  --schema order_breaking.avsc \
+  --type avro
+```
+
+Expected: validation reports the schema is not compatible, and `schema create`
+fails with an HTTP 409 error, "Schema being registered is incompatible with an
+earlier schema". The subject still has only versions 1 and 2. Fix the file one
+change at a time and validate after each: change `amount` back to `double`
+(still incompatible, because the new schema cannot read old records that lack
+`region`), then give `region` a default such as `"default": "unknown"`
+(now compatible).
+
+Questions: Which two edits were breaking, and why does `BACKWARD` reject each?
+Would removing `coupon` have been allowed? (Yes: removing a field is backward
+compatible, though not forward compatible.) What stops a producer from
+publishing records with the rejected schema? (The serializer must register or
+look up the schema first, so it fails before any record is written.)
+
+### JSON Schema and Protobuf
+
+The CLI handles the other two Schema Registry formats the same way; only the
+schema file, the `--type`, and the `--value-format` change. This directory has
+the same order as a JSON Schema (`order.schema.json`) and as Protobuf
+(`order.proto`). Each topic gets its own subject, `<topic>-value`.
+
+**JSON Schema.** Register the schema, create a topic, and produce records that
+match it. Besides the field types, this schema allows only the `status` values
+`CREATED`, `PAID` and `CANCELLED`, and rejects extra fields:
+
+```bash
+confluent schema-registry schema create \
+  --subject cli-demo-json-<STUDENT_ID>-value \
+  --schema order.schema.json \
+  --type json
+
+confluent kafka topic create cli-demo-json-<STUDENT_ID> --partitions 1
+
+confluent kafka topic produce cli-demo-json-<STUDENT_ID> \
+  --cluster <KAFKA_CLUSTER_ID> \
+  --api-key <KAFKA_API_KEY> \
+  --api-secret <KAFKA_API_SECRET> \
+  --value-format jsonschema \
+  --schema order.schema.json \
+  --schema-registry-endpoint <SCHEMA_REGISTRY_ENDPOINT> \
+  --schema-registry-api-key <SCHEMA_REGISTRY_API_KEY> \
+  --schema-registry-api-secret <SCHEMA_REGISTRY_API_SECRET>
+```
+
+At the prompt, enter one record per line:
+
+```json
+{"order_id":"order-1","customer_id":"customer-1","amount":12.5,"status":"CREATED"}
+{"order_id":"order-2","customer_id":"customer-2","amount":30,"status":"PAID"}
+```
+
+A record with `"status":"SHIPPED"` or an extra field is rejected by the
+producer, because JSON Schema (unlike plain JSON) is checked on write. Consume
+with `--value-format jsonschema`:
+
+```bash
+confluent kafka topic consume cli-demo-json-<STUDENT_ID> \
+  --cluster <KAFKA_CLUSTER_ID> \
+  --api-key <KAFKA_API_KEY> \
+  --api-secret <KAFKA_API_SECRET> \
+  --value-format jsonschema \
+  --schema-registry-endpoint <SCHEMA_REGISTRY_ENDPOINT> \
+  --schema-registry-api-key <SCHEMA_REGISTRY_API_KEY> \
+  --schema-registry-api-secret <SCHEMA_REGISTRY_API_SECRET> \
+  --from-beginning --group demo-group-1
+```
+
+**Protobuf.** The same steps with `order.proto`. The producer input is still a
+JSON record; the CLI converts it to the Protobuf wire format using the
+schema, and the consumer converts it back to JSON:
+
+```bash
+confluent schema-registry schema create \
+  --subject cli-demo-proto-<STUDENT_ID>-value \
+  --schema order.proto \
+  --type protobuf
+
+confluent kafka topic create cli-demo-proto-<STUDENT_ID> --partitions 1
+
+confluent kafka topic produce cli-demo-proto-<STUDENT_ID> \
+  --cluster <KAFKA_CLUSTER_ID> \
+  --api-key <KAFKA_API_KEY> \
+  --api-secret <KAFKA_API_SECRET> \
+  --value-format protobuf \
+  --schema order.proto \
+  --schema-registry-endpoint <SCHEMA_REGISTRY_ENDPOINT> \
+  --schema-registry-api-key <SCHEMA_REGISTRY_API_KEY> \
+  --schema-registry-api-secret <SCHEMA_REGISTRY_API_SECRET>
+```
+
+```json
+{"order_id":"order-1","customer_id":"customer-1","amount":12.5,"status":"NEW"}
+```
+
+```bash
+confluent kafka topic consume cli-demo-proto-<STUDENT_ID> \
+  --cluster <KAFKA_CLUSTER_ID> \
+  --api-key <KAFKA_API_KEY> \
+  --api-secret <KAFKA_API_SECRET> \
+  --value-format protobuf \
+  --schema-registry-endpoint <SCHEMA_REGISTRY_ENDPOINT> \
+  --schema-registry-api-key <SCHEMA_REGISTRY_API_KEY> \
+  --schema-registry-api-secret <SCHEMA_REGISTRY_API_SECRET> \
+  --from-beginning --group demo-group-1
+```
+
+Compare the three formats with `confluent schema-registry schema describe
+--subject <SUBJECT> --version latest`: Avro and JSON Schema are stored as JSON
+text, Protobuf as `.proto` source. Each topic must hold one format only, for
+the same reason as the Avro topic above.
+
 See the official
 [produce](https://docs.confluent.io/confluent-cli/current/command-reference/kafka/topic/confluent_kafka_topic_produce.html),
 [consume](https://docs.confluent.io/confluent-cli/current/command-reference/kafka/topic/confluent_kafka_topic_consume.html),
@@ -347,6 +545,8 @@ default. Verify the names before proceeding:
 confluent kafka topic describe cli-demo-<STUDENT_ID>
 confluent kafka topic delete cli-demo-<STUDENT_ID>
 confluent kafka topic delete cli-demo-avro-<STUDENT_ID>
+confluent kafka topic delete cli-demo-json-<STUDENT_ID>
+confluent kafka topic delete cli-demo-proto-<STUDENT_ID>
 confluent schema-registry subject list --all
 ```
 
@@ -362,6 +562,10 @@ confluent schema-registry schema delete \
   --subject cli-demo-avro-<STUDENT_ID>-value \
   --version all
 ```
+
+Repeat it for `cli-demo-json-<STUDENT_ID>-value` and
+`cli-demo-proto-<STUDENT_ID>-value`. Remove the local schema files with
+`rm -f order_v2.avsc order_breaking.avsc`.
 
 To permanently remove the already soft-deleted versions, run the command
 again with `--permanent`. This removes schema metadata and can affect consumers

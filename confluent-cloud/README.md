@@ -20,13 +20,14 @@ For a hands-on service-account RBAC exercise covering prefixed topic access,
 environment-wide administration, authorization denial, and audit logs, see
 the [Lab 5: RBAC And Audit Logs](LAB-5-RBAC-PREFIX-AND-AUDIT-LAB.md).
 
-For Schema Registry compatibility, see
-[Lab 6A: Schema Registry](LAB-6A-SCHEMA-REGISTRY.md). For a fully managed
+Schema Registry compatibility is covered in Lab 4. For a fully managed
 Datagen connector and a self-managed Connect worker, see
-[Lab 6B: Managed and Self-Managed Connectors](LAB-6B-MANAGED-CONNECTORS.md)
+[Lab 6A: Managed and Self-Managed Connectors](LAB-6A-MANAGED-CONNECTORS.md)
 (it includes a managed Amazon S3 sink). For a self-managed PostgreSQL sink
 connector that runs in the lab data center, see
-[Lab 6C: PostgreSQL Sink Connector in the Data Center](LAB-6C-POSTGRES-SINK-ON-PREM.md).
+[Lab 6B: PostgreSQL Sink Connector in the Data Center](LAB-6B-POSTGRES-SINK-ON-PREM.md).
+For Tableflow, which turns a Kafka topic into an Iceberg table that you read without
+Kafka, see [Lab 8: Tableflow](LAB-8-TABLEFLOW.md).
 
 For a managed JDBC (PostgreSQL) source connector that reaches a private AWS RDS
 database over PrivateLink, see
