@@ -1,0 +1,14 @@
+# Python dependencies for the PyFlink examples (Python 3.12).
+# The Flink cluster in the lab runs Flink 2.3.0, so use the matching PyFlink.
+apache-flink==2.3.0
+
+# ex00_produce_page_views_and_clicks.py and transaction_producer.py
+kafka-python>=2.0
+
+# pandas and python-dateutil come with apache-flink; listed because the examples
+# (connectors/ex07_pandas.py, ex10_movielens.py) import them directly.
+pandas
+python-dateutil
+
+# ex16/ex17 (Schema Registry): Confluent serializers and the Schema Registry client
+confluent-kafka[schemaregistry,protobuf]>=2.5

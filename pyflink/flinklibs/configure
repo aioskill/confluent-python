@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+command -v mvn >/dev/null 2>&1 || sudo apt-get install -y maven
+
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd -- "${SCRIPT_DIR}/.." && pwd)"
+POM_FILE="${REPO_ROOT}/flinklibs/pom.xml"
+DEPENDENCY_DIR="${REPO_ROOT}/flinklibs/lib"
+# Keep Maven's cache outside the repository. The downloaded runtime JARs are
+# copied into flinklibs/lib below, so the Maven repository is not needed by
+# Flink at runtime. Set MAVEN_LOCAL_REPO when an isolated cache is required.
+MAVEN_LOCAL_REPO="${MAVEN_LOCAL_REPO:-${HOME}/.m2/repository}"
+
+command -v mvn >/dev/null 2>&1 || {
+    echo "mvn is required to download Flink dependencies" >&2
+    exit 1
+}
+command -v python >/dev/null 2>&1 || {
+    echo "python is required to locate the local PyFlink installation" >&2
+    exit 1
+}
+command -v curl >/dev/null 2>&1 || {
+    echo "curl is required to download the Iceberg runtime JAR" >&2
+    exit 1
+}
+
+PYFLINK_LIB="$(python -c 'import pathlib, pyflink; print(pathlib.Path(pyflink.__file__).parent / "lib")')"
+mkdir -p "${PYFLINK_LIB}"
+
+# Remove links to the repository's generated JARs before copying the new set.
+# This also removes valid links to dependencies that are no longer present;
+# PyFlink's own files are untouched.
+shopt -s nullglob
+for linked_jar in "${PYFLINK_LIB}"/*.jar; do
+    if [[ -L "${linked_jar}" && "$(readlink "${linked_jar}")" == "${DEPENDENCY_DIR}/"* ]]; then
+        rm "${linked_jar}"
+    fi
+done
+
+mkdir -p "${DEPENDENCY_DIR}"
+# Rebuild the generated dependency directory so removed or version-conflicting
+# artifacts do not remain on the shared PyFlink classpath.
+find "${DEPENDENCY_DIR}" -maxdepth 1 -type f -name '*.jar' -delete
+
+echo "Downloading dependencies from ${POM_FILE}"
+mvn -B -ntp -Dmaven.repo.local="${MAVEN_LOCAL_REPO}" \
+    -f "${POM_FILE}" dependency:copy-dependencies \
+    -DoutputDirectory="${DEPENDENCY_DIR}" \
+    -DincludeScope=runtime
+
+# Iceberg publishes the Flink runtime as a bundled JAR without a Maven POM,
+# so dependency:copy-dependencies cannot resolve it. Iceberg 1.11.0 currently
+# publishes the Flink 2.1 runtime coordinate. Override this when a compatible
+# runtime built for the installed Flink version is available.
+ICEBERG_VERSION="${ICEBERG_VERSION:-1.11.0}"
+ICEBERG_FLINK_VERSION="${ICEBERG_FLINK_VERSION:-2.1}"
+ICEBERG_JAR="iceberg-flink-runtime-${ICEBERG_FLINK_VERSION}-${ICEBERG_VERSION}.jar"
+ICEBERG_TMP_DIR="$(mktemp -d)"
+trap 'rm -rf "${ICEBERG_TMP_DIR}"' EXIT
+curl --fail --location --retry 3 \
+    "https://repo.maven.apache.org/maven2/org/apache/iceberg/iceberg-flink-runtime-${ICEBERG_FLINK_VERSION}/${ICEBERG_VERSION}/${ICEBERG_JAR}" \
+    --output "${ICEBERG_TMP_DIR}/${ICEBERG_JAR}"
+mv "${ICEBERG_TMP_DIR}/${ICEBERG_JAR}" "${DEPENDENCY_DIR}/${ICEBERG_JAR}"
+
+dependency_jars=("${DEPENDENCY_DIR}"/*.jar)
+if ((${#dependency_jars[@]} == 0)); then
+    echo "No dependency JARs were downloaded into ${DEPENDENCY_DIR}" >&2
+    exit 1
+fi
+for jar in "${dependency_jars[@]}"; do
+    # Keep the downloaded JAR in flinklibs/lib and expose it to PyFlink via a
+    # symlink. -f replaces an older copied JAR or stale link with this one.
+    ln -sfn "${jar}" "${PYFLINK_LIB}/$(basename "${jar}")"
+done
+
+echo "Linked ${#dependency_jars[@]} dependency JARs into ${PYFLINK_LIB}"
+echo "Dependencies configuration is complete"

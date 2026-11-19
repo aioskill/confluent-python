@@ -1,0 +1,1470 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  SIGSEGV (0xb) at pc=0x000078d3c40cca40, pid=82639, tid=85123
+#
+# JRE version: OpenJDK Runtime Environment (21.0.13+1) (build 21.0.13.0.3+1-1-24.04.1-Ubuntu)
+# Java VM: OpenJDK 64-Bit Server VM (21.0.13.0.3+1-1-24.04.1-Ubuntu, mixed mode, sharing, tiered, compressed oops, compressed class ptrs, g1 gc, linux-amd64)
+# Problematic frame:
+# C  0x000078d3c40cca40
+#
+# Core dump will be written. Default location: Determined by the following: "/usr/share/apport/apport -p%p -s%s -c%c -d%d -P%P -u%u -g%g -F%F -- %E" (alternatively, falling back to /home/aio/training/confluent-python/pyflink/streaming/core.82639)
+#
+# If you would like to submit a bug report, please visit:
+#   https://bugs.launchpad.net/ubuntu/+source/openjdk-21
+# The crash happened outside the Java Virtual Machine in native code.
+# See problematic frame for where to report the bug.
+#
+
+---------------  S U M M A R Y ------------
+
+Command Line: -XX:+IgnoreUnrecognizedVMOptions --add-opens=jdk.proxy2/jdk.proxy2=ALL-UNNAMED --add-exports=java.rmi/sun.rmi.registry=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED --add-exports=java.security.jgss/sun.security.krb5=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.base/java.nio=ALL-UNNAMED --add-opens=java.base/sun.nio.ch=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED --add-opens=java.base/java.text=ALL-UNNAMED --add-opens=java.base/java.time=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.util.concurrent=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.locks=ALL-UNNAMED -Dlog.file=/tmp/claude-1000/-home-aio-training-confluent-python/7364c0e8-0225-46d6-a264-d68c920ad90a/scratchpad/fv3/lib/python3.12/site-packages/pyflink/log/flink-aio-python-einext08.log -Dlog4j.configuration=/tmp/claude-1000/-home-aio-training-confluent-python/7364c0e8-0225-46d6-a264-d68c920ad90a/scratchpad/fv3/lib/python3.12/site-packages/pyflink/conf/log4j-cli.properties -Dlog4j.configurationFile=/tmp/claude-1000/-home-aio-training-confluent-python/7364c0e8-0225-46d6-a264-d68c920ad90a/scratchpad/fv3/lib/python3.12/site-packages/pyflink/conf/log4j-cli.properties -Dlogback.configurationFile=/tmp/claude-1000/-home-aio-training-confluent-python/7364c0e8-0225-46d6-a264-d68c920ad90a/scratchpad/fv3/lib/python3.12/site-packages/pyflink/conf/logback.xml org.apache.flink.client.python.PythonGatewayServer
+
+Host: Intel(R) Core(TM) i7-10610U CPU @ 1.80GHz, 8 cores, 30G, Ubuntu 24.04.5 LTS
+Time: Thu Nov 19 00:56:16 2026 IST elapsed time: 39.069528 seconds (0d 0h 0m 39s)
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x000078d400007180):  JavaThread "grpc-default-executor-0" daemon [_thread_in_native, id=85123, stack(0x000078d3d6000000,0x000078d3d6100000) (1024K)]
+
+Stack: [0x000078d3d6000000,0x000078d3d6100000],  sp=0x000078d3d60fdba8,  free space=1014k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+C  0x000078d3c40cca40
+j  org.rocksdb.RocksDB.createColumnFamily(J[BIJ)J+0
+j  org.rocksdb.RocksDB.createColumnFamily(Lorg/rocksdb/ColumnFamilyDescriptor;)Lorg/rocksdb/ColumnFamilyHandle;+26
+j  org.apache.flink.state.rocksdb.RocksDBOperationUtils.createColumnFamily(Lorg/rocksdb/ColumnFamilyDescriptor;Lorg/rocksdb/RocksDB;Ljava/util/List;Lorg/apache/flink/core/fs/ICloseableRegistry;)Lorg/rocksdb/ColumnFamilyHandle;+49
+j  org.apache.flink.state.rocksdb.RocksDBOperationUtils.createStateInfo(Lorg/apache/flink/runtime/state/RegisteredStateMetaInfoBase;Lorg/rocksdb/RocksDB;Ljava/util/function/Function;Lorg/apache/flink/state/rocksdb/ttl/RocksDbTtlCompactFiltersManager;Ljava/lang/Long;Ljava/util/List;Lorg/apache/flink/core/fs/ICloseableRegistry;)Lorg/apache/flink/state/rocksdb/RocksDBKeyedStateBackend$RocksDbKvStateInfo;+17
+j  org.apache.flink.state.rocksdb.RocksDBOperationUtils.createStateInfo(Lorg/apache/flink/runtime/state/RegisteredStateMetaInfoBase;Lorg/rocksdb/RocksDB;Ljava/util/function/Function;Lorg/apache/flink/state/rocksdb/ttl/RocksDbTtlCompactFiltersManager;Ljava/lang/Long;Lorg/apache/flink/core/fs/ICloseableRegistry;)Lorg/apache/flink/state/rocksdb/RocksDBKeyedStateBackend$RocksDbKvStateInfo;+11
+j  org.apache.flink.state.rocksdb.RocksDBKeyedStateBackend.tryRegisterKvStateInformation(Lorg/apache/flink/api/common/state/StateDescriptor;Lorg/apache/flink/api/common/typeutils/TypeSerializer;Lorg/apache/flink/runtime/state/StateSnapshotTransformer$StateSnapshotTransformFactory;Z)Lorg/apache/flink/api/java/tuple/Tuple2;+195
+j  org.apache.flink.state.rocksdb.RocksDBKeyedStateBackend.createOrUpdateInternalState(Lorg/apache/flink/api/common/typeutils/TypeSerializer;Lorg/apache/flink/api/common/state/StateDescriptor;Lorg/apache/flink/runtime/state/StateSnapshotTransformer$StateSnapshotTransformFactory;Z)Lorg/apache/flink/api/common/state/State;+6
+j  org.apache.flink.state.rocksdb.RocksDBKeyedStateBackend.createOrUpdateInternalState(Lorg/apache/flink/api/common/typeutils/TypeSerializer;Lorg/apache/flink/api/common/state/StateDescriptor;Lorg/apache/flink/runtime/state/StateSnapshotTransformer$StateSnapshotTransformFactory;)Lorg/apache/flink/api/common/state/State;+5
+j  org.apache.flink.runtime.state.ttl.TtlStateFactory.createTtlStateContext(Lorg/apache/flink/api/common/state/StateDescriptor;)Lorg/apache/flink/runtime/state/ttl/TtlStateContext;+24
+j  org.apache.flink.runtime.state.ttl.TtlStateFactory.createMapState()Lorg/apache/flink/api/common/state/State;+67
+j  org.apache.flink.runtime.state.ttl.TtlStateFactory$$Lambda+0x000078d4a4d748e8.get()Ljava/lang/Object;+4
+j  org.apache.flink.runtime.state.ttl.TtlStateFactory.createState()Lorg/apache/flink/api/common/state/State;+59
+j  org.apache.flink.runtime.state.ttl.TtlStateFactory.createStateAndWrapWithTtlIfEnabled(Lorg/apache/flink/api/common/typeutils/TypeSerializer;Lorg/apache/flink/api/common/state/StateDescriptor;Lorg/apache/flink/runtime/state/KeyedStateBackend;Lorg/apache/flink/runtime/state/ttl/TtlTimeProvider;)Lorg/apache/flink/api/common/state/State;+41
+j  org.apache.flink.runtime.state.AbstractKeyedStateBackend.getOrCreateKeyedState(Lorg/apache/flink/api/common/typeutils/TypeSerializer;Lorg/apache/flink/api/common/state/StateDescriptor;)Lorg/apache/flink/api/common/state/State;+58
+J 14179 c2 org.apache.flink.runtime.state.AbstractKeyedStateBackend.getPartitionedState(Ljava/lang/Object;Lorg/apache/flink/api/common/typeutils/TypeSerializer;Lorg/apache/flink/api/common/state/StateDescriptor;)Lorg/apache/flink/api/common/state/State; (131 bytes) @ 0x000078d50cab8a8c [0x000078d50cab8520+0x000000000000056c]
+J 14285 c2 org.apache.flink.streaming.api.runners.python.beam.state.BeamKeyedStateStore.getMapState(Lorg/apache/beam/model/fnexecution/v1/BeamFnApi$StateRequest;)Lorg/apache/flink/api/common/state/MapState; (325 bytes) @ 0x000078d50cb111d8 [0x000078d50cb0f580+0x0000000000001c58]
+J 10650 c1 org.apache.flink.streaming.api.runners.python.beam.state.BeamStateRequestHandler.handle(Lorg/apache/beam/model/fnexecution/v1/BeamFnApi$StateRequest;)Ljava/util/concurrent/CompletionStage; (140 bytes) @ 0x000078d505951994 [0x000078d505950ee0+0x0000000000000ab4]
+J 10649 c1 org.apache.beam.runners.fnexecution.state.GrpcStateService$Inbound.onNext(Lorg/apache/beam/model/fnexecution/v1/BeamFnApi$StateRequest;)V (71 bytes) @ 0x000078d50594d63c [0x000078d50594cfe0+0x000000000000065c]
+J 10664 c1 org.apache.beam.runners.fnexecution.state.GrpcStateService$Inbound.onNext(Ljava/lang/Object;)V (9 bytes) @ 0x000078d50595e924 [0x000078d50595e7c0+0x0000000000000164]
+J 10344 c1 org.apache.beam.vendor.grpc.v1p60p1.io.grpc.stub.ServerCalls$StreamingServerCallHandler$StreamingServerCallListener.onMessage(Ljava/lang/Object;)V (29 bytes) @ 0x000078d50588d57c [0x000078d50588d460+0x000000000000011c]
+J 16078 c1 org.apache.beam.vendor.grpc.v1p60p1.io.grpc.Contexts$ContextualizedServerCallListener.onMessage(Ljava/lang/Object;)V (36 bytes) @ 0x000078d505e130b4 [0x000078d505e12e00+0x00000000000002b4]
+J 14615 c2 org.apache.beam.vendor.grpc.v1p60p1.io.grpc.internal.SerializingExecutor.run()V (114 bytes) @ 0x000078d50cbba9bc [0x000078d50cbba8c0+0x00000000000000fc]
+J 10531 c1 java.util.concurrent.ThreadPoolExecutor.runWorker(Ljava/util/concurrent/ThreadPoolExecutor$Worker;)V java.base@21.0.13.0.3 (187 bytes) @ 0x000078d50590bab4 [0x000078d50590b120+0x0000000000000994]
+J 12987 c1 java.util.concurrent.ThreadPoolExecutor$Worker.run()V java.base@21.0.13.0.3 (9 bytes) @ 0x000078d505110ecc [0x000078d505110e40+0x000000000000008c]
+J 9075 c1 java.lang.Thread.run()V java.base@21.0.13.0.3 (23 bytes) @ 0x000078d5056202fc [0x000078d505620240+0x00000000000000bc]
+v  ~StubRoutines::call_stub 0x000078d50bd37cc6
+V  [libjvm.so+0x91a40a]  JavaCalls::call_helper(JavaValue*, methodHandle const&, JavaCallArguments*, JavaThread*)+0x2da
+V  [libjvm.so+0x91bbf2]  JavaCalls::call_virtual(JavaValue*, Handle, Klass*, Symbol*, Symbol*, JavaThread*)+0x1a2
+V  [libjvm.so+0x9f6f33]  thread_entry(JavaThread*, JavaThread*)+0x93
+V  [libjvm.so+0x9323b6]  JavaThread::thread_main_inner()+0x1e6
+V  [libjvm.so+0xfa5e47]  Thread::call_run()+0xa7
+V  [libjvm.so+0xd11255]  thread_native_entry(Thread*)+0xd5
+C  [libc.so.6+0x9cb64]
+Java frames: (J=compiled Java code, j=interpreted, Vv=VM code)
+j  org.rocksdb.RocksDB.createColumnFamily(J[BIJ)J+0
+j  org.rocksdb.RocksDB.createColumnFamily(Lorg/rocksdb/ColumnFamilyDescriptor;)Lorg/rocksdb/ColumnFamilyHandle;+26
+j  org.apache.flink.state.rocksdb.RocksDBOperationUtils.createColumnFamily(Lorg/rocksdb/ColumnFamilyDescriptor;Lorg/rocksdb/RocksDB;Ljava/util/List;Lorg/apache/flink/core/fs/ICloseableRegistry;)Lorg/rocksdb/ColumnFamilyHandle;+49
+j  org.apache.flink.state.rocksdb.RocksDBOperationUtils.createStateInfo(Lorg/apache/flink/runtime/state/RegisteredStateMetaInfoBase;Lorg/rocksdb/RocksDB;Ljava/util/function/Function;Lorg/apache/flink/state/rocksdb/ttl/RocksDbTtlCompactFiltersManager;Ljava/lang/Long;Ljava/util/List;Lorg/apache/flink/core/fs/ICloseableRegistry;)Lorg/apache/flink/state/rocksdb/RocksDBKeyedStateBackend$RocksDbKvStateInfo;+17
+j  org.apache.flink.state.rocksdb.RocksDBOperationUtils.createStateInfo(Lorg/apache/flink/runtime/state/RegisteredStateMetaInfoBase;Lorg/rocksdb/RocksDB;Ljava/util/function/Function;Lorg/apache/flink/state/rocksdb/ttl/RocksDbTtlCompactFiltersManager;Ljava/lang/Long;Lorg/apache/flink/core/fs/ICloseableRegistry;)Lorg/apache/flink/state/rocksdb/RocksDBKeyedStateBackend$RocksDbKvStateInfo;+11
+j  org.apache.flink.state.rocksdb.RocksDBKeyedStateBackend.tryRegisterKvStateInformation(Lorg/apache/flink/api/common/state/StateDescriptor;Lorg/apache/flink/api/common/typeutils/TypeSerializer;Lorg/apache/flink/runtime/state/StateSnapshotTransformer$StateSnapshotTransformFactory;Z)Lorg/apache/flink/api/java/tuple/Tuple2;+195
+j  org.apache.flink.state.rocksdb.RocksDBKeyedStateBackend.createOrUpdateInternalState(Lorg/apache/flink/api/common/typeutils/TypeSerializer;Lorg/apache/flink/api/common/state/StateDescriptor;Lorg/apache/flink/runtime/state/StateSnapshotTransformer$StateSnapshotTransformFactory;Z)Lorg/apache/flink/api/common/state/State;+6
+j  org.apache.flink.state.rocksdb.RocksDBKeyedStateBackend.createOrUpdateInternalState(Lorg/apache/flink/api/common/typeutils/TypeSerializer;Lorg/apache/flink/api/common/state/StateDescriptor;Lorg/apache/flink/runtime/state/StateSnapshotTransformer$StateSnapshotTransformFactory;)Lorg/apache/flink/api/common/state/State;+5
+j  org.apache.flink.runtime.state.ttl.TtlStateFactory.createTtlStateContext(Lorg/apache/flink/api/common/state/StateDescriptor;)Lorg/apache/flink/runtime/state/ttl/TtlStateContext;+24
+j  org.apache.flink.runtime.state.ttl.TtlStateFactory.createMapState()Lorg/apache/flink/api/common/state/State;+67
+j  org.apache.flink.runtime.state.ttl.TtlStateFactory$$Lambda+0x000078d4a4d748e8.get()Ljava/lang/Object;+4
+j  org.apache.flink.runtime.state.ttl.TtlStateFactory.createState()Lorg/apache/flink/api/common/state/State;+59
+j  org.apache.flink.runtime.state.ttl.TtlStateFactory.createStateAndWrapWithTtlIfEnabled(Lorg/apache/flink/api/common/typeutils/TypeSerializer;Lorg/apache/flink/api/common/state/StateDescriptor;Lorg/apache/flink/runtime/state/KeyedStateBackend;Lorg/apache/flink/runtime/state/ttl/TtlTimeProvider;)Lorg/apache/flink/api/common/state/State;+41
+j  org.apache.flink.runtime.state.AbstractKeyedStateBackend.getOrCreateKeyedState(Lorg/apache/flink/api/common/typeutils/TypeSerializer;Lorg/apache/flink/api/common/state/StateDescriptor;)Lorg/apache/flink/api/common/state/State;+58
+J 14179 c2 org.apache.flink.runtime.state.AbstractKeyedStateBackend.getPartitionedState(Ljava/lang/Object;Lorg/apache/flink/api/common/typeutils/TypeSerializer;Lorg/apache/flink/api/common/state/StateDescriptor;)Lorg/apache/flink/api/common/state/State; (131 bytes) @ 0x000078d50cab8a8c [0x000078d50cab8520+0x000000000000056c]
+J 14285 c2 org.apache.flink.streaming.api.runners.python.beam.state.BeamKeyedStateStore.getMapState(Lorg/apache/beam/model/fnexecution/v1/BeamFnApi$StateRequest;)Lorg/apache/flink/api/common/state/MapState; (325 bytes) @ 0x000078d50cb111d8 [0x000078d50cb0f580+0x0000000000001c58]
+J 10650 c1 org.apache.flink.streaming.api.runners.python.beam.state.BeamStateRequestHandler.handle(Lorg/apache/beam/model/fnexecution/v1/BeamFnApi$StateRequest;)Ljava/util/concurrent/CompletionStage; (140 bytes) @ 0x000078d505951994 [0x000078d505950ee0+0x0000000000000ab4]
+J 10649 c1 org.apache.beam.runners.fnexecution.state.GrpcStateService$Inbound.onNext(Lorg/apache/beam/model/fnexecution/v1/BeamFnApi$StateRequest;)V (71 bytes) @ 0x000078d50594d63c [0x000078d50594cfe0+0x000000000000065c]
+J 10664 c1 org.apache.beam.runners.fnexecution.state.GrpcStateService$Inbound.onNext(Ljava/lang/Object;)V (9 bytes) @ 0x000078d50595e924 [0x000078d50595e7c0+0x0000000000000164]
+J 10344 c1 org.apache.beam.vendor.grpc.v1p60p1.io.grpc.stub.ServerCalls$StreamingServerCallHandler$StreamingServerCallListener.onMessage(Ljava/lang/Object;)V (29 bytes) @ 0x000078d50588d57c [0x000078d50588d460+0x000000000000011c]
+J 16078 c1 org.apache.beam.vendor.grpc.v1p60p1.io.grpc.Contexts$ContextualizedServerCallListener.onMessage(Ljava/lang/Object;)V (36 bytes) @ 0x000078d505e130b4 [0x000078d505e12e00+0x00000000000002b4]
+J 14615 c2 org.apache.beam.vendor.grpc.v1p60p1.io.grpc.internal.SerializingExecutor.run()V (114 bytes) @ 0x000078d50cbba9bc [0x000078d50cbba8c0+0x00000000000000fc]
+J 10531 c1 java.util.concurrent.ThreadPoolExecutor.runWorker(Ljava/util/concurrent/ThreadPoolExecutor$Worker;)V java.base@21.0.13.0.3 (187 bytes) @ 0x000078d50590bab4 [0x000078d50590b120+0x0000000000000994]
+J 12987 c1 java.util.concurrent.ThreadPoolExecutor$Worker.run()V java.base@21.0.13.0.3 (9 bytes) @ 0x000078d505110ecc [0x000078d505110e40+0x000000000000008c]
+J 9075 c1 java.lang.Thread.run()V java.base@21.0.13.0.3 (23 bytes) @ 0x000078d5056202fc [0x000078d505620240+0x00000000000000bc]
+v  ~StubRoutines::call_stub 0x000078d50bd37cc6
+
+siginfo: si_signo: 11 (SIGSEGV), si_code: 2 (SEGV_ACCERR), si_addr: 0x000078d3c40cca40
+
+Registers:
+RAX=0x000078d3c4000710, RBX=0x000078d3d60fdbd0, RCX=0x000078d3d60fdbc0, RDX=0x000078d40c00ec30
+RSP=0x000078d3d60fdba8, RBP=0x000078d3d60fdc20, RSI=0x000078d3c410b9c0, RDI=0x000078d3d60fdbd0
+R8 =0x000078d3d60fdbc8, R9 =0x0000000000000007, R10=0x000078d40c00d7b0, R11=0x0a0d47d8fcefbf4f
+R12=0x000078d3d60fdbc0, R13=0x000078d400007540, R14=0x000078d3c410b9c0, R15=0x000078d40c00ec30
+RIP=0x000078d3c40cca40, EFLAGS=0x0000000000010297, CSGSFS=0x002b000000000033, ERR=0x0000000000000015
+  TRAPNO=0x000000000000000e
+
+XMM[0]=0x6761702d65746174 0x732d6e6f68747970
+XMM[1]=0x73776569762d6567 0x61702d6574617473
+XMM[2]=0x6574697277282037 0x3433353234332074
+XMM[3]=0x636f6c42616e6572 0x61202c3436383830
+XMM[4]=0x6e657241746c7561 0x666564202c30203d
+XMM[5]=0x6170614372656761 0x6e614d7265666675
+XMM[6]=0x3d20657a69536b63 0x6f6c42616e657241
+XMM[7]=0x756769666e6f4365 0x7a69536b636f6c42
+XMM[8]=0x3d20657a69537265 0x6666754265746972
+XMM[9]=0x1010101010101010 0x0804080402011010
+XMM[10]=0xffffffffffffffff 0xffffffffffffffff
+XMM[11]=0x1a1b1b1b1a131111 0x1111111111111115
+XMM[12]=0x0000000400000002 0x0000000100000000
+XMM[13]=0xffffffff0c0d0e08 0x090a040506000102
+XMM[14]=0x0000000000000000 0x32c9dd1d34452f10
+XMM[15]=0x0000000000000000 0x0000000000000000
+  MXCSR=0x00001fa2
+
+
+Register to memory mapping:
+
+RAX=0x000078d3c4000710 points into unknown readable memory: 0x000078d3c4000700 | 00 07 00 c4 d3 78 00 00
+RBX=0x000078d3d60fdbd0 is pointing into the stack for thread: 0x000078d400007180
+RCX=0x000078d3d60fdbc0 is pointing into the stack for thread: 0x000078d400007180
+RDX=0x000078d40c00ec30 points into unknown readable memory: 0x0000000100000002 | 02 00 00 00 01 00 00 00
+RSP=0x000078d3d60fdba8 is pointing into the stack for thread: 0x000078d400007180
+RBP=0x000078d3d60fdc20 is pointing into the stack for thread: 0x000078d400007180
+RSI=0x000078d3c410b9c0 points into unknown readable memory: 0x000078d3c4000710 | 10 07 00 c4 d3 78 00 00
+RDI=0x000078d3d60fdbd0 is pointing into the stack for thread: 0x000078d400007180
+R8 =0x000078d3d60fdbc8 is pointing into the stack for thread: 0x000078d400007180
+R9 =0x0000000000000007 is an unknown value
+R10=0x000078d40c00d7b0 points into unknown readable memory: 0x000078d5228d1f10 | 10 1f 8d 22 d5 78 00 00
+R11=0x0a0d47d8fcefbf4f is an unknown value
+R12=0x000078d3d60fdbc0 is pointing into the stack for thread: 0x000078d400007180
+R13=0x000078d400007540 points into unknown readable memory: 0x000078d5228e7060 | 60 70 8e 22 d5 78 00 00
+R14=0x000078d3c410b9c0 points into unknown readable memory: 0x000078d3c4000710 | 10 07 00 c4 d3 78 00 00
+R15=0x000078d40c00ec30 points into unknown readable memory: 0x0000000100000002 | 02 00 00 00 01 00 00 00
+
+Top of Stack: (sp=0x000078d3d60fdba8)
+0x000078d3d60fdba8:   000078d3a6ee0e56 000078d3d60fdcb8   V....x.......x..
+0x000078d3d60fdbb8:   000078d5054ea364 000078d40c008118   d.N..x.......x..
+0x000078d3d60fdbc8:   0000000000000002 00000000ffffffff   ................
+0x000078d3d60fdbd8:   000078d400007180 000078d3a6edb210   .q...x.......x..
+0x000078d3d60fdbe8:   000078d3a6ee7660 000078d3a0ff85c2   `v...x.......x..
+0x000078d3d60fdbf8:   000078d3ab1ef878 0000000000000000   x....x..........
+0x000078d3d60fdc08:   000078d3ab1ef870 000078d3d60fdd00   p....x.......x..
+0x000078d3d60fdc18:   000078d400007180 000078d3d60fdcb0   .q...x.......x..
+0x000078d3d60fdc28:   000078d50bd439c0 000078d3d60fdcb8   .9...x.......x..
+0x000078d3d60fdc38:   000078d50bd3f626 000000061bfe77c0   &....x...w......
+0x000078d3d60fdc48:   00000006171ca030 0000000000000000   0...............
+0x000078d3d60fdc58:   00000006123a96e8 0000000612ae0fc0   ..:.............
+0x000078d3d60fdc68:   000078d3d60fdc68 0000000000000000   h....x..........
+0x000078d3d60fdc78:   000000000000000a 000078d3ab200248   ........H. ..x..
+0x000078d3d60fdc88:   0000000000000000 00000006171c5720   ........ W......
+0x000078d3d60fdc98:   000078d3ab1ef878 0000000000000000   x....x..........
+0x000078d3d60fdca8:   000078d3d60fdcd0 000078d3d60fdd68   .....x..h....x..
+0x000078d3d60fdcb8:   000078d50bd3f25e 0000000000000000   ^....x..........
+0x000078d3d60fdcc8:   000078d50bd40fd6 000078d40c00ec30   .....x..0....x..
+0x000078d3d60fdcd8:   0000000000000000 0000000000000017   ................
+0x000078d3d60fdce8:   000000061bfe7228 000078d3c410b9c0   (r...........x..
+0x000078d3d60fdcf8:   0000000000000000 00000006161fc820   ........ .......
+0x000078d3d60fdd08:   00000006161fc820 000000061bfe78c0    ........x......
+0x000078d3d60fdd18:   000000061bfe78c0 000078d3d60fdd20   .x...... ....x..
+0x000078d3d60fdd28:   000078d3ab1e3dea 0000000000000004   .=...x..........
+0x000078d3d60fdd38:   000078d3ab200248 0000000000000000   H. ..x..........
+0x000078d3d60fdd48:   00000006171c5720 000078d3ab1e3e10    W.......>...x..
+0x000078d3d60fdd58:   000078d3d60fdcd0 000078d3d60fdd80   .....x.......x..
+0x000078d3d60fdd68:   000078d3d60fddd8 000078d50bd3f2f2   .....x.......x..
+0x000078d3d60fdd78:   0000000000000000 000000061bfe78a8   .........x......
+0x000078d3d60fdd88:   00000006161fc820 000078d3d60fdd90    ............x..
+0x000078d3d60fdd98:   000078d3ab207019 0000000000000008   .p ..x..........
+
+Instructions: (pc=0x000078d3c40cca40)
+0x000078d3c40cc940:   00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x000078d3c40cc950:   00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x000078d3c40cc960:   ff ff ff ff 00 00 00 00 00 00 00 00 00 00 00 00
+0x000078d3c40cc970:   00 00 00 00 00 00 00 00 38 d6 17 c4 d3 78 00 00
+0x000078d3c40cc980:   01 00 00 00 00 00 00 00 00 00 08 00 00 00 00 00
+0x000078d3c40cc990:   00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x000078d3c40cc9a0:   00 00 00 00 00 00 00 00 00 00 00 00 00 00 e0 3f
+0x000078d3c40cc9b0:   00 00 00 00 00 00 10 41 00 00 00 00 00 00 00 00
+0x000078d3c40cc9c0:   00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x000078d3c40cc9d0:   00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x000078d3c40cc9e0:   c8 c9 0c c4 d3 78 00 00 c8 c9 0c c4 d3 78 00 00
+0x000078d3c40cc9f0:   00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x000078d3c40cca00:   00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x000078d3c40cca10:   c8 c9 0c c4 d3 78 00 00 c8 c9 0c c4 d3 78 00 00
+0x000078d3c40cca20:   04 00 00 00 00 00 00 00 b0 21 0b c4 d3 78 00 00
+0x000078d3c40cca30:   00 00 00 00 1a 00 00 00 00 00 00 00 00 00 00 00
+0x000078d3c40cca40:   00 00 00 00 00 00 00 00 11 22 00 00 00 00 00 00
+0x000078d3c40cca50:   40 07 00 c4 d3 78 00 00 40 de 17 c4 d3 78 00 00
+0x000078d3c40cca60:   10 72 0b c4 d3 78 00 00 40 de 17 c4 d3 78 00 00
+0x000078d3c40cca70:   00 00 00 00 00 00 00 00 38 d6 17 c4 d3 78 00 00
+0x000078d3c40cca80:   01 00 00 00 00 00 00 00 00 00 08 00 00 00 00 00
+0x000078d3c40cca90:   00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x000078d3c40ccaa0:   00 00 00 00 00 00 00 00 00 00 00 00 00 00 e0 3f
+0x000078d3c40ccab0:   00 00 00 00 00 00 10 41 00 00 00 00 00 00 00 00
+0x000078d3c40ccac0:   00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x000078d3c40ccad0:   00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x000078d3c40ccae0:   c8 ca 0c c4 d3 78 00 00 c8 ca 0c c4 d3 78 00 00
+0x000078d3c40ccaf0:   00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x000078d3c40ccb00:   00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x000078d3c40ccb10:   c8 ca 0c c4 d3 78 00 00 c8 ca 0c c4 d3 78 00 00
+0x000078d3c40ccb20:   04 00 00 00 00 00 00 00 40 22 0b c4 d3 78 00 00
+0x000078d3c40ccb30:   00 00 00 00 1a 00 00 00 00 00 00 00 00 00 00 00
+
+
+Stack slot to memory mapping:
+
+stack at sp + 0 slots: 0x000078d3a6ee0e56: Java_org_rocksdb_RocksDB_createColumnFamily+0x0000000000000086 in /tmp/minicluster_31d271ad26fd5aba03a8b6bb743f22e0/tm_0/tmp/rocksdb-lib-2fae4a624397435c37ad98540dd319d4/librocksdbjni-linux64.so at 0x000078d3a6c00000
+stack at sp + 1 slots: 0x000078d3d60fdcb8 is pointing into the stack for thread: 0x000078d400007180
+stack at sp + 2 slots: 0x000078d5054ea364 is at entry_point+548 in (nmethod*)0x000078d5054e9f90
+Compiled method (c1) 39116 8179       3       org.apache.logging.log4j.spi.AbstractLogger::logIfEnabled (25 bytes)
+ total in heap  [0x000078d5054e9f90,0x000078d5054ea4f0] = 1376
+ relocation     [0x000078d5054ea0e8,0x000078d5054ea138] = 80
+ main code      [0x000078d5054ea140,0x000078d5054ea3e0] = 672
+ stub code      [0x000078d5054ea3e0,0x000078d5054ea430] = 80
+ oops           [0x000078d5054ea430,0x000078d5054ea438] = 8
+ metadata       [0x000078d5054ea438,0x000078d5054ea450] = 24
+ scopes data    [0x000078d5054ea450,0x000078d5054ea498] = 72
+ scopes pcs     [0x000078d5054ea498,0x000078d5054ea4e8] = 80
+ dependencies   [0x000078d5054ea4e8,0x000078d5054ea4f0] = 8
+0x000078d5054ea2cb:   48 b8 70 27 23 9b d4 78 00 00 8b 5b 08 49 ba 00
+0x000078d5054ea2db:   00 00 a3 d4 78 00 00 49 03 da 48 3b 98 a0 01 00
+0x000078d5054ea2eb:   00 75 0d 48 83 80 a8 01 00 00 01 e9 60 00 00 00
+0x000078d5054ea2fb:   48 3b 98 b0 01 00 00 75 0d 48 83 80 b8 01 00 00
+0x000078d5054ea30b:   01 e9 4a 00 00 00 48 83 b8 a0 01 00 00 00 75 17
+0x000078d5054ea31b:   48 89 98 a0 01 00 00 48 c7 80 a8 01 00 00 01 00
+0x000078d5054ea32b:   00 00 e9 29 00 00 00 48 83 b8 b0 01 00 00 00 75
+0x000078d5054ea33b:   17 48 89 98 b0 01 00 00 48 c7 80 b8 01 00 00 01
+0x000078d5054ea34b:   00 00 00 e9 08 00 00 00 48 83 80 90 01 00 00 01
+0x000078d5054ea35b:   0f 1f 40 00 e8 1c ff 9f ff 0f 1f 84 00 d4 03 00
+0x000078d5054ea36b:   01 48 83 c4 70 5d 
+stack at sp + 3 slots: 0x000078d40c008118 points into unknown readable memory: 0x732d6e6f68747970 | 70 79 74 68 6f 6e 2d 73
+stack at sp + 4 slots: 0x0000000000000002 is an unknown value
+stack at sp + 5 slots: 0x00000000ffffffff is an unknown value
+stack at sp + 6 slots: 0x000078d400007180 is a thread
+stack at sp + 7 slots: 0x000078d3a6edb210: <offset 0x00000000002db210> in /tmp/minicluster_31d271ad26fd5aba03a8b6bb743f22e0/tm_0/tmp/rocksdb-lib-2fae4a624397435c37ad98540dd319d4/librocksdbjni-linux64.so at 0x000078d3a6c00000
+
+
+Compiled method (c2) 39122 14179       4       org.apache.flink.runtime.state.AbstractKeyedStateBackend::getPartitionedState (131 bytes)
+ total in heap  [0x000078d50cab8290,0x000078d50cab9e10] = 7040
+ relocation     [0x000078d50cab83e8,0x000078d50cab8510] = 296
+ main code      [0x000078d50cab8520,0x000078d50cab9698] = 4472
+ stub code      [0x000078d50cab9698,0x000078d50cab96e8] = 80
+ oops           [0x000078d50cab96e8,0x000078d50cab96f8] = 16
+ metadata       [0x000078d50cab96f8,0x000078d50cab97a8] = 176
+ scopes data    [0x000078d50cab97a8,0x000078d50cab9b40] = 920
+ scopes pcs     [0x000078d50cab9b40,0x000078d50cab9d30] = 496
+ dependencies   [0x000078d50cab9d30,0x000078d50cab9d50] = 32
+ handler table  [0x000078d50cab9d50,0x000078d50cab9dc8] = 120
+ nul chk table  [0x000078d50cab9dc8,0x000078d50cab9e10] = 72
+
+[Constant Pool (empty)]
+
+[MachCode]
+[Entry Point]
+  # {method} {0x000078d49aba9fa8} 'getPartitionedState' '(Ljava/lang/Object;Lorg/apache/flink/api/common/typeutils/TypeSerializer;Lorg/apache/flink/api/common/state/StateDescriptor;)Lorg/apache/flink/api/common/state/State;' in 'org/apache/flink/runtime/state/AbstractKeyedStateBackend'
+  # this:     rsi:rsi   = 'org/apache/flink/runtime/state/AbstractKeyedStateBackend'
+  # parm0:    rdx:rdx   = 'java/lang/Object'
+  # parm1:    rcx:rcx   = 'org/apache/flink/api/common/typeutils/TypeSerializer'
+  # parm2:    r8:r8     = 'org/apache/flink/api/common/state/StateDescriptor'
+  #           [sp+0x60]  (sp of caller)
+  0x000078d50cab8520: 448b 5608 | 49bb 0000 | 00a3 d478 | 0000 4d03 | d349 3bc2 
+
+  0x000078d50cab8534: ;   {runtime_call ic_miss_stub}
+  0x000078d50cab8534: 0f85 46cb | 2cff 6690 | 0f1f 4000 
+[Verified Entry Point]
+  0x000078d50cab8540: 8984 2400 | c0fe ff55 | 4883 ec50 | 4181 7f20 | 1200 0000 | 0f85 2e11 | 0000 4c89 | 4424 1848 
+  0x000078d50cab8560: 894c 2410 | 4889 3424 | 4889 5424 | 3848 85d2 | 0f84 ce0c | 0000 448b | 461c 4c8b | f249 c1ee 
+  0x000078d50cab8580: 0345 85c0 | 0f84 2001 | 0000 4c8b | 5424 1841 | 8b4a 0c44 | 3bc1 0f84 | 0b08 0000 | 0f1f 4000 
+  0x000078d50cab85a0: 85c9 0f84 | 0201 0000 | 450f be54 | cc10 470f | be5c c410 | 453b da0f | 85d7 0c00 | 0045 8b5c 
+  0x000078d50cab85c0: cc14 478b | 54c4 1447 | 8b4c dc0c | 438b 4cd4 | 0c41 3bc9 | 0f85 d000 | 0000 4f8d | 04dc 4b8d 
+  0x000078d50cab85e0: 74dc 104f | 8d1c d44b | 8d7c d410 | 85c9 0f84 | 9d00 0000 | 8bc1 83e0 | 1f83 e1e0 | 0f84 4b00 
+  0x000078d50cab8600: 0000 488d | 3c0f 488d | 340e 48f7 | d9c5 fe6f | 040f c5fe | 6f0c 0ec5 | fdef c1c4 | e27d 17c0 
+  0x000078d50cab8620: 0f85 7200 | 0000 4883 | c120 75e1 | 85c0 0f84 
+
+  0x000078d50cab8630: ;   {no_reloc}
+  0x000078d50cab8630: 5d00 0000 | c5fe 6f44 | 07e0 c5fe | 6f4c 06e0 | c5fd efc1 | c4e2 7d17 | c075 4deb | 448b c883 
+  0x000078d50cab8650: e1fc 7419 | 488d 3c0f | 488d 340e | 48f7 d98b | 1c0f 3b1c | 0e75 3148 | 83c1 0475 | f2a8 0274 
+  0x000078d50cab8670: 120f b71f | 0fb7 0e3b | d975 1d48 | 8d7f 0248 | 8d76 02a8 | 0174 0a0f | b61f 0fb6 | 0e3b d975 
+  0x000078d50cab8690: 07b8 0100 | 0000 eb02 | 33c0 c5fd | efc0 c5f5 | efc9 85c0 | 0f85 fd06 | 0000 4c8b | 5424 1841 
+  0x000078d50cab86b0: 8b4a 0c4c | 8b14 2445 | 8b52 180f | 1f44 0000 
+
+  0x000078d50cab86c0: ; implicit exception: dispatches to 0x000078d50cab95e8
+  0x000078d50cab86c0: 478b 44d4 
+
+  0x000078d50cab86c4: ;   {metadata('java/util/HashMap')}
+  0x000078d50cab86c4: 0841 81f8 | 00b7 0800 | 0f85 fa0b | 0000 49c1 | e203 458b | 5224 660f | 1f44 0000 | 4585 d20f 
+  0x000078d50cab86e4: 8466 0700 | 0047 8b4c | d40c 4585 | c90f 860d | 0c00 004b | 8d34 d40f | 1f44 0000 | 85c9 0f84 
+  0x000078d50cab8704: 5d07 0000 | 458b 5ccc | 0c41 ffc9 | 4585 db0f | 8525 0200 | 0045 0fb6 | 5ccc 1190 | 4585 db0f 
+  0x000078d50cab8724: 8547 0700 | 0045 8b5c | cc14 4180 | 7ccc 1000 | 0f85 4107 | 0000 438b | 54dc 0c4f | 8d14 dc4b 
+  0x000078d50cab8744: 8d7c dc10 | 83fa 020f | 8c18 0800 | 0033 db83 | fa20 0f8c | 7501 0000 | 4533 dbc5 | d5ef edc5 
+  0x000078d50cab8764: cdef f6c5 | c5ef ffc4 | 413d efc0 
+
+  0x000078d50cab8770: ;   {external_word}
+  0x000078d50cab8770: 49ba c00d | 6022 d578 | 0000 458b | 02c4 c179 | 6ec0 c4e2 | 7d58 c044 | 8bd2 4183 | e2e0 410f 
+  0x000078d50cab8790: afd8 c421 | 7a7e 0c1f | c421 7a7e | 541f 08c4 | 217a 7e5c | 1f10 c421 | 7a7e 641f | 18c4 e255 
+  0x000078d50cab87b0: 40e8 c442 | 7d31 c9c4 | c155 fee9 | c4e2 4d40 | f0c4 427d | 31d2 c4c1 | 4dfe f2c4 | e245 40f8 
+  0x000078d50cab87d0: c442 7d31 | dbc4 c145 | fefb c462 | 3d40 c0c4 | 427d 31e4 | c441 3dfe | c441 83c3 | 2045 3bda 
+  0x000078d50cab87f0: 7c9c 4a8d | 3c17 412b 
+
+  0x000078d50cab87f8: ;   {external_word}
+  0x000078d50cab87f8: d249 bac4 | 0d60 22d5 | 7800 00c4 | c17e 6f0a | c4e2 5540 
+
+  0x000078d50cab880c: ;   {external_word}
+  0x000078d50cab880c: e949 bae4 | 0d60 22d5 | 7800 00c4 | c17e 6f12 | c4e2 4d40 
+
+  0x000078d50cab8820: ;   {external_word}
+  0x000078d50cab8820: f249 ba04 | 0e60 22d5 | 7800 00c4 | c17e 6f1a | c4e2 4540 
+
+  0x000078d50cab8834: ;   {external_word}
+  0x000078d50cab8834: fb49 ba24 | 0e60 22d5 | 7800 00c4 | c17e 6f22 | c462 3d40 | c4c4 6255 | 02cd c443 | 7d39 ca01 
+  0x000078d50cab8854: c441 31fe | cac4 4231 | 02c9 c579 | 6ed3 c441 | 31fe cac5 | 797e cbc4 | 624d 02de | c443 7d39 
+  0x000078d50cab8874: dc01 c441 | 21fe dcc4 | 4221 02db | c579 6ee3 | c441 21fe | dcc5 797e | dbc4 6245 | 02cf c443 
+  0x000078d50cab8894: 7d39 ca01 | c441 31fe | cac4 4231 | 02c9 c579 | 6ed3 c441 | 31fe cac5 | 797e cbc4 | 423d 02d8 
+  0x000078d50cab88b4: c443 7d39 | dc01 c441 | 21fe dcc4 | 4221 02db | c579 6ee3 | c441 21fe | dcc5 797e | db41 bb01 
+  0x000078d50cab88d4: 0000 0044 | 3bda 0f8d | 2e00 0000 | 41b8 c103 | 0000 410f | afd8 460f | b654 1fff | 458b c241 
+  0x000078d50cab88f4: c1e0 0545 | 2bc2 4103 | d846 0fb6 | 041f 4103 | d841 83c3 | 0244 3bda | 7cd2 7f12 | 448b d3c1 
+  0x000078d50cab8914: e305 412b | da46 0fb6 | 441f ff41 | 03d8 85db | 0f84 5206 | 0000 4189 | 5ccc 0c44 | 8bc3 41c1 
+  0x000078d50cab8934: ;   {no_reloc}
+  0x000078d50cab8934: e810 4433 | c345 23c8 | eb0d 458b | c341 c1e8 | 1045 33c3 | 4523 c846 | 8b5c 8e10 | 4585 db0f 
+  0x000078d50cab8954: 8513 0200 | 0049 ba00 | 6088 ffd4 | 7800 004c | 8954 2408 | e907 0100 | 0048 ff74 | 2408 488f 
+  0x000078d50cab8974: 0424 448b | 7424 208b | 4c24 2444 | 8b44 2428 | 448b 5c24 | 2c47 8b4c | dc18 4585 | c90f 84ce 
+  0x000078d50cab8994: 0000 0043 | 8b5c dc08 | 0f1f 4000 
+
+  0x000078d50cab89a0: ;   {metadata('java/util/HashMap$TreeNode')}
+  0x000078d50cab89a0: 81fb 70e9 | 1a00 0f84 | 940a 0000 | 4b8d 2ccc | 49ba 0060 | 88ff d478 | 0000 4c89 | 5424 0844 
+  0x000078d50cab89c0: 8b55 0c45 | 3bd0 7427 | 498b 9758 | 0400 0044 | 8b5d 184c | 8b4c 2438 | 488b 5c24 
+
+  0x000078d50cab89dc: ; ImmutableOopMap {r11=NarrowOop r9=Oop rcx=NarrowOop rbx=Oop r14=NarrowOop [0]=Oop [16]=Oop [24]=Oop [56]=Oop }
+                      ;*ifnonnull {reexecute=1 rethrow=0 return_oop=0}
+                      ; - (reexecute) java.util.HashMap::getNode@145 (line 587)
+                      ; - java.util.HashMap::get@2 (line 564)
+                      ; - org.apache.flink.runtime.state.AbstractKeyedStateBackend::getPartitionedState@51 (line 439)
+                      ;   {poll}
+  0x000078d50cab89dc: 1885 0290 | 4585 db0f | 848b 0000 | 004b 8d2c | dceb d044 | 8b5d 1044 | 3bd9 0f84 | fd01 0000 
+  0x000078d50cab89fc: 0f1f 4000 | 85c9 0f84 | 740a 0000 | 4489 4424 | 3048 ff74 | 2408 488f | 4424 2844 | 8974 2420 
+  0x000078d50cab8a1c: 48ff 7424 | 3848 8f44 | 2408 498d | 34cc 894c | 2424 498b | d348 c1e2 | 0366 6690 
+
+  0x000078d50cab8a38: ;   {optimized virtual_call}
+  0x000078d50cab8a38: c5f8 77e8 
+
+  0x000078d50cab8a3c: ; ImmutableOopMap {rbp=Oop [0]=Oop [8]=Oop [16]=Oop [24]=Oop [32]=NarrowOop [36]=NarrowOop [56]=Oop }
+                      ;*invokevirtual equals {reexecute=0 rethrow=0 return_oop=0}
+                      ; - java.util.HashMap::getNode@128 (line 585)
+                      ; - java.util.HashMap::get@2 (line 564)
+                      ; - org.apache.flink.runtime.state.AbstractKeyedStateBackend::getPartitionedState@51 (line 439)
+  0x000078d50cab8a3c: 40c9 2cff 
+
+  0x000078d50cab8a40: ;   {other}
+  0x000078d50cab8a40: 0f1f 8400 | b007 0001 | 85c0 0f84 | 4c0a 0000 | 448b 7424 | 2048 ff74 | 2428 488f | 4424 0890 
+  0x000078d50cab8a60: e994 0100 | 0049 ba00 | 6088 ffd4 | 7800 004c | 8954 2408 | 488b 3424 | 488b 5424 | 1048 8b4c 
+  0x000078d50cab8a80: 2418 6690 
+
+  0x000078d50cab8a84: ;   {optimized virtual_call}
+  0x000078d50cab8a84: c5f8 77e8 
+
+  0x000078d50cab8a88: ; ImmutableOopMap {[0]=Oop [24]=Oop [56]=Oop }
+                      ;*invokevirtual getOrCreateKeyedState {reexecute=0 rethrow=0 return_oop=1}
+                      ; - org.apache.flink.runtime.state.AbstractKeyedStateBackend::getPartitionedState@94 (line 447)
+  0x000078d50cab8a88: 0c0c 0000 
+
+  0x000078d50cab8a8c: ;   {other}
+  0x000078d50cab8a8c: 0f1f 8400 | fc07 0002 | 488b d844 | 8b58 080f | 1f44 0000 
+
+  0x000078d50cab8aa0: ;   {metadata('org/apache/flink/runtime/state/ttl/TtlMapState')}
+  0x000078d50cab8aa0: 4181 fb68 | 5fd7 010f | 8563 0a00 | 0041 807f | 4000 0f85 | d504 0000 | 488b eb4c | 8b54 2418 
+  0x000078d50cab8ac0: 458b 520c | 4c8b 1c24 | 4589 531c | 4d8b c249 | c1e0 034c | 8bed 49c1 | ed03 4d33 | c349 c1e8 
+  0x000078d50cab8ae0: 164d 85c0 | 7423 4585 | d274 1e49 | c1eb 0948 | bf00 6088 | ffd4 7800 | 0049 03fb | 0f1f 4000 
+  0x000078d50cab8b00: 803f 020f | 8551 0500 | 0041 807f | 4000 0f85 | b404 0000 | 4c8b 1424 | 4589 6a20 | 4c8b d54c 
+  0x000078d50cab8b20: 8b1c 244d | 33d3 49c1 | ea16 4d85 | d274 1b49 | c1eb 094c | 8b44 2408 | 4d03 c30f | 1f44 0000 
+  0x000078d50cab8b40: 4180 3802 | 0f85 bb04 | 0000 488b | f548 8b54 | 2438 6690 
+
+  0x000078d50cab8b54: ;   {optimized virtual_call}
+  0x000078d50cab8b54: c5f8 77e8 
+
+  0x000078d50cab8b58: ; ImmutableOopMap {rbp=Oop }
+                      ;*invokeinterface setCurrentNamespace {reexecute=0 rethrow=0 return_oop=0}
+                      ; - org.apache.flink.runtime.state.AbstractKeyedStateBackend::getPartitionedState@123 (line 452)
+  0x000078d50cab8b58: 64ad e2ff 
+
+  0x000078d50cab8b5c: ;   {other}
+  0x000078d50cab8b5c: 0f1f 8400 | cc08 0003 | 488b dde9 | ca02 0000 | 438b 5cdc | 0c41 3bd8 | 0f85 0ffe | ffff 478b 
+  0x000078d50cab8b7c: 4cdc 104b | 8d2c dc44 | 3bc9 0f84 | 5e00 0000 | 85c9 0f84 | 7108 0000 | 4489 5c24 | 2c44 8944 
+  0x000078d50cab8b9c: 2428 4489 | 7424 2048 | ff34 2448 | 8f44 2408 | 48ff 7424 | 3848 8f04 | 2449 8d34 | cc89 4c24 
+  0x000078d50cab8bbc: 2449 8bd1 | 48c1 e203 
+
+  0x000078d50cab8bc4: ;   {optimized virtual_call}
+  0x000078d50cab8bc4: c5f8 77e8 
+
+  0x000078d50cab8bc8: ; ImmutableOopMap {rbp=Oop [0]=Oop [8]=Oop [16]=Oop [24]=Oop [32]=NarrowOop [36]=NarrowOop [44]=NarrowOop [56]=Oop }
+                      ;*invokevirtual equals {reexecute=0 rethrow=0 return_oop=0}
+                      ; - java.util.HashMap::getNode@63 (line 578)
+                      ; - java.util.HashMap::get@2 (line 564)
+                      ; - org.apache.flink.runtime.state.AbstractKeyedStateBackend::getPartitionedState@51 (line 439)
+  0x000078d50cab8bc8: b4c7 2cff 
+
+  0x000078d50cab8bcc: ;   {other}
+  0x000078d50cab8bcc: 0f1f 8400 | 3c09 0004 | 85c0 0f84 | 91fd ffff | 48ff 7424 | 0848 8f04 | 2444 8b74 | 2420 49ba 
+  0x000078d50cab8bec: 0060 88ff | d478 0000 | 4c89 5424 | 088b 5d14 | 0f1f 4000 | 85db 0f84 | 6cfe ffff | 458b 54dc 
+  0x000078d50cab8c0c: ;   {metadata('org/apache/flink/runtime/state/ttl/TtlMapState')}
+  0x000078d50cab8c0c: 0841 81fa | 685f d701 | 0f85 c208 | 0000 660f | 1f44 0000 | 4180 7f40 | 000f 8588 | 0400 004c 
+  0x000078d50cab8c2c: 8b14 2448 | c1e3 034c | 8bdb 4d33 | da4c 8bc3 | 49c1 e803 | 4c8b 0c24 | 4589 4120 | 49c1 eb16 
+  0x000078d50cab8c4c: 4d85 db0f | 8456 0400 | 0049 c1ea | 0948 bf00 | 6088 ffd4 | 7800 0049 | 03fa 803f | 020f 8504 
+  0x000078d50cab8c6c: 0500 004c | 8bd3 458b | 5a08 6666 | 0f1f 8400 | 0000 0000 
+
+  0x000078d50cab8c80: ;   {metadata('org/apache/flink/runtime/state/ttl/TtlMapState')}
+  0x000078d50cab8c80: 4181 fb68 | 5fd7 010f | 85ab 0600 | 0045 8b52 | 1847 8b5c | d408 6666 | 0f1f 8400 | 0000 0000 
+  0x000078d50cab8ca0: ;   {metadata('org/apache/flink/state/rocksdb/RocksDBMapState')}
+  0x000078d50cab8ca0: 4181 fbc0 | 54cb 010f | 858b 0800 | 004b 8d2c | d441 807f | 4000 0f85 | 3704 0000 | 4489 7514 
+  0x000078d50cab8cc0: 4c8b 5424 | 384c 8bdd | 4d33 d349 | c1ea 164d | 85d2 741a | 49c1 eb09 | 48bf 0060 | 88ff d478 
+  0x000078d50cab8ce0: 0000 4903 | fb80 3f02 | 0f85 e704 | 0000 4180 | 7f40 000f | 853a 0400 | 004c 8b54 | 2418 458b 
+  0x000078d50cab8d00: 420c 4c8b | 1424 4589 | 421c 4d8b | d849 c1e3 | 034d 33da | 49c1 eb16 | 0f1f 8400 | 0000 0000 
+  0x000078d50cab8d20: 4d85 db0f | 840d 0100 | 0045 85c0 | 0f84 0401 | 0000 49c1 | ea09 4c8b | 5c24 084d | 03da 4d8b 
+  0x000078d50cab8d40: d341 803b | 020f 84eb | 0000 004d | 8b5f 484d | 8b47 58f0 | 8344 24c0 | 000f 1f80 | 0000 0000 
+  0x000078d50cab8d60: 4180 3a00 | 0f84 cc00 | 0000 4588 | 224d 85db | 7523 498b | fa49 8bf7 | c5f8 7749 | ba30 eabb 
+  0x000078d50cab8d80: 21d5 7800 | 0041 ffd2 
+
+  0x000078d50cab8d88: ;   {other}
+  0x000078d50cab8d88: 0f1f 8400 | 0000 0000 | e9a1 0000 | 004f 8954 | 18f8 4983 | c3f8 4d89 | 5f48 e98f | 0000 004c 
+  0x000078d50cab8da8: 8b14 2445 | 8b6a 2047 | 8b54 ec08 | 0f1f 8400 | 0000 0000 | 6666 6690 
+
+  0x000078d50cab8dc0: ;   {metadata('org/apache/flink/runtime/state/ttl/TtlMapState')}
+  0x000078d50cab8dc0: 4181 fa68 | 5fd7 010f | 8559 0400 | 004f 8d14 | ec45 8b52 | 1847 8b44 | d408 660f | 1f44 0000 
+  0x000078d50cab8de0: ;   {metadata('org/apache/flink/state/rocksdb/RocksDBMapState')}
+  0x000078d50cab8de0: 4181 f8c0 | 54cb 010f | 8577 0700 | 004b 8d1c | d441 807f | 4000 0f85 | df00 0000 | 4489 7314 
+  0x000078d50cab8e00: 4c8b 5424 | 384c 8bdb | 4d33 d349 | c1ea 164d | 85d2 741b | 49c1 eb09 | 49b8 0060 | 88ff d478 
+  0x000078d50cab8e20: 0000 4d03 | c341 8038 | 020f 85e4 | 0000 0049 | 8bdd 48c1 | e303 488b | c3c5 f877 | 4883 c450 
+  0x000078d50cab8e40: ;   {poll_return}
+  0x000078d50cab8e40: 5d49 3ba7 | 5004 0000 | 0f87 2408 | 0000 c349 | ba00 6088 | ffd4 7800 | 004c 8954 | 2408 6690 
+  0x000078d50cab8e60: e90f fcff | ff45 33c9 | 4533 c0e9 | dbfa ffff | 4533 c945 | 33c0 e9d0 | faff ff48 | 8974 2430 
+  0x000078d50cab8e80: 4489 4c24 | 2844 8974 | 2420 48ff | 3424 488f | 4424 0848 | 8914 2449 | 8bf3 48c1 | e603 498d 
+  0x000078d50cab8ea0: 2ccc 894c | 2424 6690 
+
+  0x000078d50cab8ea8: ;   {static_call}
+  0x000078d50cab8ea8: c5f8 77e8 
+
+  0x000078d50cab8eac: ; ImmutableOopMap {rbp=Oop [0]=Oop [8]=Oop [16]=Oop [24]=Oop [32]=NarrowOop [36]=NarrowOop [48]=Oop [56]=Oop }
+                      ;*invokestatic hashCode {reexecute=0 rethrow=0 return_oop=0}
+                      ; - java.lang.String::hashCode@37 (line 2359)
+                      ; - java.util.HashMap::hash@9 (line 338)
+                      ; - java.util.HashMap::getNode@23 (line 576)
+                      ; - java.util.HashMap::get@2 (line 564)
+                      ; - org.apache.flink.runtime.state.AbstractKeyedStateBackend::getPartitionedState@51 (line 439)
+  0x000078d50cab8eac: d0ca 2cff 
+
+  0x000078d50cab8eb0: ;   {other}
+  0x000078d50cab8eb0: 0f1f 8400 | 200c 0005 | 8bd8 48ff | 7424 0848 | 8f04 2444 | 8b74 2420 | 8b4c 2424 | 448b 4c24 
+  0x000078d50cab8ed0: 2848 8b74 | 2430 e947 | faff ff44 | 8b5b 1490 | 4585 db0f | 8413 ffff | ff4d 8b57 | 2849 8bfb 
+  0x000078d50cab8ef0: 48c1 e703 | 4d85 d20f | 8477 0300 | 004d 8b5f | 384b 897c | 13f8 4983 | c2f8 4d89 | 5728 e9e9 
+  0x000078d50cab8f10: feff ff4d | 8b57 584d | 8b5f 48f0 | 8344 24c0 | 0041 8038 | 0074 3545 | 8820 4d85 | db74 0f4f 
+  0x000078d50cab8f30: 8944 1af8 | 4983 c3f8 | 4d89 5f48 | eb1e 498b | f849 8bf7 | c5f8 7749 | ba30 eabb | 21d5 7800 
+  0x000078d50cab8f50: 0041 ffd2 
+
+  0x000078d50cab8f54: ;   {other}
+  0x000078d50cab8f54: 0f1f 8400 | 0000 0000 | 4c8b 1424 | 458b 6a20 | e9c6 feff | ff85 d276 | 080f b61f | e9ad f9ff 
+  0x000078d50cab8f74: ff33 dbe9 | a6f9 ffff | 41c6 44cc | 1101 4533 | c945 33c0 | e9be f9ff | ff4c 8b14 | 2445 8b52 
+  0x000078d50cab8f94: 1c45 85d2 | 0f84 1afb | ffff 4d8b | 5f28 498b | fa48 c1e7 | 034d 85db | 0f84 b203 | 0000 4d8b 
+  0x000078d50cab8fb4: 5738 4b89 | 7c1a f849 | 83c3 f84d | 895f 28e9 | f0fa ffff | 4c8b 1424 | 458b 5220 | 4585 d20f 
+  0x000078d50cab8fd4: 843b fbff | ff4d 8b5f | 2849 8bfa | 48c1 e703 | 4d85 db0f | 8498 0300 | 004d 8b57 | 384b 897c 
+  0x000078d50cab8ff4: 1af8 4983 | c3f8 4d89 | 5f28 6690 | e90f fbff | ff4d 8b57 | 484d 8b5f | 58f0 8344 | 24c0 0041 
+  0x000078d50cab9014: 8038 000f | 842d fbff | ff45 8820 | 4d85 d275 | 2349 8bf8 | 498b f7c5 | f877 49ba | 30ea bb21 
+  0x000078d50cab9034: d578 0000 
+
+  0x000078d50cab9038: ;   {other}
+  0x000078d50cab9038: 41ff d20f | 1f84 0000 | 0000 00e9 | 02fb ffff | 4f89 4413 | f849 83c2 | f84d 8957 | 48e9 f0fa 
+  0x000078d50cab9058: ffff 4d8b | 5748 4d8b | 5f58 f083 | 4424 c000 | 803f 000f | 8498 faff | ff44 8827 | 4d85 d275 
+  0x000078d50cab9078: 2049 8bf7 | c5f8 7749 | ba30 eabb | 21d5 7800 | 0041 ffd2 
+
+  0x000078d50cab908c: ;   {other}
+  0x000078d50cab908c: 0f1f 8400 | 0000 0000 | e970 faff | ff4b 897c | 13f8 4983 | c2f8 4d89 | 5748 e95e | faff ff4c 
+  0x000078d50cab90ac: 8bd3 e9bf | fbff ff4c | 8b14 2445 | 8b5a 200f | 1f44 0000 | 4585 db0f | 8462 fbff | ff4d 8b57 
+  0x000078d50cab90cc: 2849 8bfb | 48c1 e703 | 4d85 d20f | 84c8 0200 | 004d 8b5f | 384b 897c | 13f8 4983 | c2f8 4d89 
+  0x000078d50cab90ec: 5728 e938 | fbff ff44 | 8b55 1466 | 0f1f 8400 | 0000 0000 | 4585 d20f | 84b3 fbff | ff4d 8b5f 
+  0x000078d50cab910c: 2849 8bfa | 48c1 e703 | 4d85 db0f | 84a8 0200 | 004d 8b57 | 384b 897c | 1af8 4983 | c3f8 4d89 
+  0x000078d50cab912c: 5f28 e989 | fbff ff4c | 8b14 2445 | 8b52 1c0f | 1f44 0000 | 4585 d20f | 84b0 fbff | ff4d 8b5f 
+  0x000078d50cab914c: 2849 8bfa | 48c1 e703 | 4d85 db0f | 8488 0200 | 004d 8b57 | 384b 897c | 1af8 4983 | c3f8 4d89 
+  0x000078d50cab916c: 5f28 e986 | fbff ff4d | 8b57 484d | 8b5f 58f0 | 8344 24c0 | 0080 3f00 | 7432 4488 
+
+  0x000078d50cab9188: ;   {no_reloc}
+  0x000078d50cab9188: 274d 85d2 | 740f 4b89 | 7c13 f849 | 83c2 f84d | 8957 48eb | 1b49 8bf7 | c5f8 7749 | ba30 eabb 
+  0x000078d50cab91a8: 21d5 7800 | 0041 ffd2 
+
+  0x000078d50cab91b0: ;   {other}
+  0x000078d50cab91b0: 0f1f 8400 | 0000 0000 | 4c8b 1424 | 458b 5a20 | 4585 db0f | 84f7 0200 | 004d 8bd3 | 49c1 e203 
+  0x000078d50cab91d0: e99d faff | ff4d 8b57 | 484d 8b5f | 58f0 8344 | 24c0 0080 | 3f00 0f84 | 02fb ffff | 4488 274d 
+  0x000078d50cab91f0: 85d2 7520 | 498b f7c5 | f877 49ba | 30ea bb21 | d578 0000 
+
+  0x000078d50cab9204: ;   {other}
+  0x000078d50cab9204: 41ff d20f | 1f84 0000 | 0000 00e9 | dafa ffff | 4b89 7c13 | f849 83c2 | f84d 8957 | 48e9 c8fa 
+  0x000078d50cab9224: ffff bede | ffff ff48 | 8b2c 2444 | 892c 2490 
+
+  0x000078d50cab9234: ;   {runtime_call UncommonTrapBlob}
+  0x000078d50cab9234: c5f8 77e8 
+
+  0x000078d50cab9238: ; ImmutableOopMap {rbp=Oop [0]=NarrowOop [56]=Oop }
+                      ;*invokeinterface setCurrentNamespace {reexecute=0 rethrow=0 return_oop=0}
+                      ; - org.apache.flink.runtime.state.AbstractKeyedStateBackend::getPartitionedState@33 (line 435)
+  0x000078d50cab9238: c41c 2dff 
+
+  0x000078d50cab923c: ;   {other}
+  0x000078d50cab923c: 0f1f 8400 | ac0f 0006 | be45 ffff | ff48 8b2c | 2448 894c | 2408 4c89 | 4424 1048 | 8954 2418 
+  0x000078d50cab925c: 4889 5424 | 2066 6690 
+
+  0x000078d50cab9264: ;   {runtime_call UncommonTrapBlob}
+  0x000078d50cab9264: c5f8 77e8 
+
+  0x000078d50cab9268: ; ImmutableOopMap {rbp=Oop [8]=Oop [16]=Oop [24]=Oop [32]=Oop }
+                      ;*ifnonnull {reexecute=1 rethrow=0 return_oop=0}
+                      ; - (reexecute) org.apache.flink.util.Preconditions::checkNotNull@1 (line 75)
+                      ; - org.apache.flink.runtime.state.AbstractKeyedStateBackend::getPartitionedState@3 (line 432)
+  0x000078d50cab9268: 941c 2dff 
+
+  0x000078d50cab926c: ;   {other}
+  0x000078d50cab926c: 0f1f 8400 | dc0f 0007 | 498b f7c5 | f877 49ba | 00ea bb21 | d578 0000 
+
+  0x000078d50cab9284: ;   {other}
+  0x000078d50cab9284: 41ff d20f | 1f84 0000 | 0000 00e9 | 68fb ffff | be45 ffff | ff48 8b2c | 244c 8b44 | 2410 4c89 
+  0x000078d50cab92a4: 4424 0848 | ff74 2418 | 488f 4424 | 1044 895c | 2418 4489 | 5424 1c90 
+
+  0x000078d50cab92bc: ;   {runtime_call UncommonTrapBlob}
+  0x000078d50cab92bc: c5f8 77e8 
+
+  0x000078d50cab92c0: ; ImmutableOopMap {rbp=Oop [8]=Oop [16]=Oop [56]=Oop }
+                      ;*if_icmpne {reexecute=1 rethrow=0 return_oop=0}
+                      ; - (reexecute) java.lang.String::equals@33 (line 1850)
+                      ; - org.apache.flink.runtime.state.AbstractKeyedStateBackend::getPartitionedState@22 (line 434)
+  0x000078d50cab92c0: 3c1c 2dff 
+
+  0x000078d50cab92c4: ;   {other}
+  0x000078d50cab92c4: 0f1f 8400 | 3410 0008 | bede ffff | ff48 8b2c | 244c 8b5c | 2410 4c89 | 5c24 0848 | ff74 2418 
+  0x000078d50cab92e4: 488f 4424 | 1044 8954 | 2418 894c | 241c 6690 
+
+  0x000078d50cab92f4: ;   {runtime_call UncommonTrapBlob}
+  0x000078d50cab92f4: c5f8 77e8 
+
+  0x000078d50cab92f8: ; ImmutableOopMap {rbp=Oop [8]=Oop [16]=Oop [24]=NarrowOop [28]=NarrowOop [56]=Oop }
+                      ;*invokevirtual get {reexecute=0 rethrow=0 return_oop=0}
+                      ; - org.apache.flink.runtime.state.AbstractKeyedStateBackend::getPartitionedState@51 (line 439)
+  0x000078d50cab92f8: 041c 2dff 
+
+  0x000078d50cab92fc: ;   {other}
+  0x000078d50cab92fc: 0f1f 8400 | 6c10 0009 | be45 ffff | ff48 8b2c | 244c 8b54 | 2410 4c89 | 5424 0848 | ff74 2418 
+  0x000078d50cab931c: 488f 4424 | 1044 894c | 2418 6690 
+
+  0x000078d50cab9328: ;   {runtime_call UncommonTrapBlob}
+  0x000078d50cab9328: c5f8 77e8 
+
+  0x000078d50cab932c: ; ImmutableOopMap {rbp=Oop [8]=Oop [16]=Oop [56]=Oop }
+                      ;*ifle {reexecute=1 rethrow=0 return_oop=0}
+                      ; - (reexecute) java.util.HashMap::getNode@14 (line 575)
+                      ; - java.util.HashMap::get@2 (line 564)
+                      ; - org.apache.flink.runtime.state.AbstractKeyedStateBackend::getPartitionedState@51 (line 439)
+  0x000078d50cab932c: d01b 2dff 
+
+  0x000078d50cab9330: ;   {other}
+  0x000078d50cab9330: 0f1f 8400 | a010 000a | bede ffff | ff48 8b2c | 2448 ff74 | 2418 488f | 0424 4889 | 5c24 084c 
+  0x000078d50cab9350: 8954 2410 
+
+  0x000078d50cab9354: ;   {runtime_call UncommonTrapBlob}
+  0x000078d50cab9354: c5f8 77e8 
+
+  0x000078d50cab9358: ; ImmutableOopMap {rbp=Oop [0]=Oop [8]=Oop [16]=Oop [56]=Oop }
+                      ;*invokeinterface setCurrentNamespace {reexecute=0 rethrow=0 return_oop=0}
+                      ; - org.apache.flink.runtime.state.AbstractKeyedStateBackend::getPartitionedState@75 (line 442)
+  0x000078d50cab9358: a41b 2dff 
+
+  0x000078d50cab935c: ;   {other}
+  0x000078d50cab935c: 0f1f 8400 | cc10 000b | 498b f7c5 | f877 49ba | 00ea bb21 | d578 0000 
+
+  0x000078d50cab9374: ;   {other}
+  0x000078d50cab9374: 41ff d20f | 1f84 0000 | 0000 0090 | e933 f7ff | ff49 8bf7 | c5f8 7749 | ba00 eabb | 21d5 7800 
+  0x000078d50cab9394: 0041 ffd2 
+
+  0x000078d50cab9398: ;   {other}
+  0x000078d50cab9398: 0f1f 8400 | 0000 0000 | e96f f7ff | ff49 8bf7 | c5f8 7749 | ba00 eabb | 21d5 7800 | 0041 ffd2 
+  0x000078d50cab93b8: ;   {other}
+  0x000078d50cab93b8: 0f1f 8400 | 0000 0000 | e966 f8ff | ff49 8bf7 | c5f8 7749 | ba00 eabb | 21d5 7800 | 0041 ffd2 
+  0x000078d50cab93d8: ;   {other}
+  0x000078d50cab93d8: 0f1f 8400 | 0000 0000 | e9d7 f8ff | ff49 8bf7 | c5f8 7749 | ba00 eabb | 21d5 7800 | 0041 ffd2 
+  0x000078d50cab93f8: ;   {other}
+  0x000078d50cab93f8: 0f1f 8400 | 0000 0000 | e9f4 f8ff | ffbe 45ff | ffff 488b | 2c24 4c8b | 5424 104c | 8954 2408 
+  0x000078d50cab9418: 48ff 7424 | 1848 8f44 | 2410 4489 | 5c24 1c44 | 8944 2420 | 894c 2424 
+
+  0x000078d50cab9430: ;   {runtime_call UncommonTrapBlob}
+  0x000078d50cab9430: c5f8 77e8 
+
+  0x000078d50cab9434: ; ImmutableOopMap {rbp=Oop [8]=Oop [16]=Oop [28]=NarrowOop [36]=NarrowOop [56]=Oop }
+                      ;*ifnull {reexecute=1 rethrow=0 return_oop=0}
+                      ; - (reexecute) java.util.HashMap::getNode@57 (line 577)
+                      ; - java.util.HashMap::get@2 (line 564)
+                      ; - org.apache.flink.runtime.state.AbstractKeyedStateBackend::getPartitionedState@51 (line 439)
+  0x000078d50cab9434: c81a 2dff 
+
+  0x000078d50cab9438: ;   {other}
+  0x000078d50cab9438: 0f1f 8400 | a811 000c | be45 ffff | ff48 8b2c | 244c 8b54 | 2410 4c89 | 5424 0848 | ff74 2418 
+  0x000078d50cab9458: 488f 4424 | 1089 4c24 | 1844 895c | 241c 4489 | 4424 2090 
+
+  0x000078d50cab946c: ;   {runtime_call UncommonTrapBlob}
+  0x000078d50cab946c: c5f8 77e8 
+
+  0x000078d50cab9470: ; ImmutableOopMap {rbp=Oop [8]=Oop [16]=Oop [24]=NarrowOop [28]=NarrowOop [56]=Oop }
+                      ;*ifeq {reexecute=1 rethrow=0 return_oop=0}
+                      ; - (reexecute) java.util.HashMap::getNode@85 (line 581)
+                      ; - java.util.HashMap::get@2 (line 564)
+                      ; - org.apache.flink.runtime.state.AbstractKeyedStateBackend::getPartitionedState@51 (line 439)
+  0x000078d50cab9470: 8c1a 2dff 
+
+  0x000078d50cab9474: ;   {other}
+  0x000078d50cab9474: 0f1f 8400 | e411 000d | be45 ffff | ff44 8944 | 2424 894c | 2428 6690 
+
+  0x000078d50cab948c: ;   {runtime_call UncommonTrapBlob}
+  0x000078d50cab948c: c5f8 77e8 
+
+  0x000078d50cab9490: ; ImmutableOopMap {rbp=Oop [0]=Oop [16]=Oop [24]=Oop [40]=NarrowOop [56]=Oop }
+                      ;*ifnull {reexecute=1 rethrow=0 return_oop=0}
+                      ; - (reexecute) java.util.HashMap::getNode@122 (line 584)
+                      ; - java.util.HashMap::get@2 (line 564)
+                      ; - org.apache.flink.runtime.state.AbstractKeyedStateBackend::getPartitionedState@51 (line 439)
+  0x000078d50cab9490: 6c1a 2dff 
+
+  0x000078d50cab9494: ;   {other}
+  0x000078d50cab9494: 0f1f 8400 | 0412 000e | be45 ffff | ff44 8b5c | 2424 4489 | 5c24 2089 | 4424 2890 
+
+  0x000078d50cab94b0: ;   {runtime_call UncommonTrapBlob}
+  0x000078d50cab94b0: c5f8 77e8 
+
+  0x000078d50cab94b4: ; ImmutableOopMap {rbp=Oop [0]=Oop [8]=Oop [16]=Oop [24]=Oop [32]=NarrowOop }
+                      ;*ifeq {reexecute=1 rethrow=0 return_oop=0}
+                      ; - (reexecute) java.util.HashMap::getNode@131 (line 585)
+                      ; - java.util.HashMap::get@2 (line 564)
+                      ; - org.apache.flink.runtime.state.AbstractKeyedStateBackend::getPartitionedState@51 (line 439)
+  0x000078d50cab94b4: 481a 2dff 
+
+  0x000078d50cab94b8: ;   {other}
+  0x000078d50cab94b8: 0f1f 8400 | 2812 000f | bef6 ffff | ff48 8b6c | 2438 6690 
+
+  0x000078d50cab94cc: ;   {runtime_call UncommonTrapBlob}
+  0x000078d50cab94cc: c5f8 77e8 
+
+  0x000078d50cab94d0: ; ImmutableOopMap {rbp=Oop }
+                      ;*invokeinterface setCurrentNamespace {reexecute=0 rethrow=0 return_oop=0}
+                      ; - org.apache.flink.runtime.state.AbstractKeyedStateBackend::getPartitionedState@75 (line 442)
+  0x000078d50cab94d0: 2c1a 2dff 
+
+  0x000078d50cab94d4: ;   {other}
+  0x000078d50cab94d4: 0f1f 8400 | 4412 0010 | bede ffff | ff48 8b2c | 244c 8b54 | 2410 4c89 | 5424 0848 | ff74 2418 
+  0x000078d50cab94f4: 488f 4424 | 1089 5c24 | 1866 6690 
+
+  0x000078d50cab9500: ;   {runtime_call UncommonTrapBlob}
+  0x000078d50cab9500: c5f8 77e8 
+
+  0x000078d50cab9504: ; ImmutableOopMap {rbp=Oop [8]=Oop [16]=Oop [24]=NarrowOop [56]=Oop }
+                      ;*checkcast {reexecute=0 rethrow=0 return_oop=0}
+                      ; - org.apache.flink.runtime.state.AbstractKeyedStateBackend::getPartitionedState@54 (line 439)
+  0x000078d50cab9504: f819 2dff 
+
+  0x000078d50cab9508: ;   {other}
+  0x000078d50cab9508: 0f1f 8400 | 7812 0011 | bede ffff | ff48 8b2c | 2448 ff74 | 2418 488f | 4424 0848 | 8944 2418 
+  0x000078d50cab9528: ;   {runtime_call UncommonTrapBlob}
+  0x000078d50cab9528: c5f8 77e8 
+
+  0x000078d50cab952c: ; ImmutableOopMap {rbp=Oop [8]=Oop [24]=Oop [56]=Oop }
+                      ;*checkcast {reexecute=0 rethrow=0 return_oop=0}
+                      ; - org.apache.flink.runtime.state.AbstractKeyedStateBackend::getPartitionedState@101 (line 448)
+  0x000078d50cab952c: d019 2dff 
+
+  0x000078d50cab9530: ;   {other}
+  0x000078d50cab9530: 0f1f 8400 | a012 0012 | bede ffff | ff48 8b2c | 2448 ff74 | 2418 488f | 0424 4889 | 5c24 0844 
+  0x000078d50cab9550: 8954 2418 
+
+  0x000078d50cab9554: ;   {runtime_call UncommonTrapBlob}
+  0x000078d50cab9554: c5f8 77e8 
+
+  0x000078d50cab9558: ; ImmutableOopMap {rbp=Oop [0]=Oop [8]=Oop [24]=NarrowOop [56]=Oop }
+                      ;*checkcast {reexecute=0 rethrow=0 return_oop=0}
+                      ; - org.apache.flink.runtime.state.ttl.AbstractTtlState::setCurrentNamespace@4 (line 76)
+                      ; - org.apache.flink.runtime.state.AbstractKeyedStateBackend::getPartitionedState@75 (line 442)
+  0x000078d50cab9558: a419 2dff 
+
+  0x000078d50cab955c: ;   {other}
+  0x000078d50cab955c: 0f1f 8400 | cc12 0013 | bede ffff | ff48 8b2c | 2444 8954 | 2408 6690 
+
+  0x000078d50cab9574: ;   {runtime_call UncommonTrapBlob}
+  0x000078d50cab9574: c5f8 77e8 
+
+  0x000078d50cab9578: ; ImmutableOopMap {rbp=Oop [8]=NarrowOop [56]=Oop }
+                      ;*checkcast {reexecute=0 rethrow=0 return_oop=0}
+                      ; - org.apache.flink.runtime.state.ttl.AbstractTtlState::setCurrentNamespace@4 (line 76)
+                      ; - org.apache.flink.runtime.state.AbstractKeyedStateBackend::getPartitionedState@33 (line 435)
+  0x000078d50cab9578: 8419 2dff 
+
+  0x000078d50cab957c: ;   {other}
+  0x000078d50cab957c: 0f1f 8400 | ec12 0014 | bef6 ffff | ff66 6690 
+
+  0x000078d50cab958c: ;   {runtime_call UncommonTrapBlob}
+  0x000078d50cab958c: c5f8 77e8 
+
+  0x000078d50cab9590: ; ImmutableOopMap {}
+                      ;*invokevirtual getName {reexecute=0 rethrow=0 return_oop=0}
+                      ; - org.apache.flink.runtime.state.AbstractKeyedStateBackend::getPartitionedState@19 (line 434)
+  0x000078d50cab9590: 6c19 2dff 
+
+  0x000078d50cab9594: ;   {other}
+  0x000078d50cab9594: 0f1f 8400 | 0413 0015 | bef6 ffff | ff48 8bea 
+
+  0x000078d50cab95a4: ;   {runtime_call UncommonTrapBlob}
+  0x000078d50cab95a4: c5f8 77e8 
+
+  0x000078d50cab95a8: ; ImmutableOopMap {rbp=Oop }
+                      ;*invokeinterface setCurrentNamespace {reexecute=0 rethrow=0 return_oop=0}
+                      ; - org.apache.flink.runtime.state.AbstractKeyedStateBackend::getPartitionedState@33 (line 435)
+  0x000078d50cab95a8: 5419 2dff 
+
+  0x000078d50cab95ac: ;   {other}
+  0x000078d50cab95ac: 0f1f 8400 | 1c13 0016 | bef4 ffff | ff48 8b2c | 2466 6690 
+
+  0x000078d50cab95c0: ;   {runtime_call UncommonTrapBlob}
+  0x000078d50cab95c0: c5f8 77e8 
+
+  0x000078d50cab95c4: ; ImmutableOopMap {rbp=Oop [56]=Oop }
+                      ;*checkcast {reexecute=0 rethrow=0 return_oop=0}
+                      ; - org.apache.flink.runtime.state.ttl.AbstractTtlState::setCurrentNamespace@4 (line 76)
+                      ; - org.apache.flink.runtime.state.AbstractKeyedStateBackend::getPartitionedState@33 (line 435)
+  0x000078d50cab95c4: 3819 2dff 
+
+  0x000078d50cab95c8: ;   {other}
+  0x000078d50cab95c8: 0f1f 8400 | 3813 0017 | bef6 ffff | ff66 6690 
+
+  0x000078d50cab95d8: ;   {runtime_call UncommonTrapBlob}
+  0x000078d50cab95d8: c5f8 77e8 
+
+  0x000078d50cab95dc: ; ImmutableOopMap {}
+                      ;*invokevirtual getName {reexecute=0 rethrow=0 return_oop=0}
+                      ; - org.apache.flink.runtime.state.AbstractKeyedStateBackend::getPartitionedState@48 (line 439)
+  0x000078d50cab95dc: 2019 2dff 
+
+  0x000078d50cab95e0: ;   {other}
+  0x000078d50cab95e0: 0f1f 8400 | 5013 0018 | bef6 ffff | ff8b e990 
+
+  0x000078d50cab95f0: ;   {runtime_call UncommonTrapBlob}
+  0x000078d50cab95f0: c5f8 77e8 
+
+  0x000078d50cab95f4: ; ImmutableOopMap {rbp=NarrowOop }
+                      ;*invokevirtual get {reexecute=0 rethrow=0 return_oop=0}
+                      ; - org.apache.flink.runtime.state.AbstractKeyedStateBackend::getPartitionedState@51 (line 439)
+  0x000078d50cab95f4: 0819 2dff 
+
+  0x000078d50cab95f8: ;   {other}
+  0x000078d50cab95f8: 0f1f 8400 | 6813 0019 | bef4 ffff | ff48 8b2c | 2466 6690 
+
+  0x000078d50cab960c: ;   {runtime_call UncommonTrapBlob}
+  0x000078d50cab960c: c5f8 77e8 
+
+  0x000078d50cab9610: ; ImmutableOopMap {rbp=Oop [24]=Oop [56]=Oop }
+                      ;*checkcast {reexecute=0 rethrow=0 return_oop=0}
+                      ; - org.apache.flink.runtime.state.AbstractKeyedStateBackend::getPartitionedState@101 (line 448)
+  0x000078d50cab9610: ec18 2dff 
+
+  0x000078d50cab9614: ;   {other}
+  0x000078d50cab9614: 0f1f 8400 | 8413 001a | bef4 ffff | ff48 8b2c | 2448 895c | 2408 6690 
+
+  0x000078d50cab962c: ;   {runtime_call UncommonTrapBlob}
+  0x000078d50cab962c: c5f8 77e8 
+
+  0x000078d50cab9630: ; ImmutableOopMap {rbp=Oop [8]=Oop [24]=Oop [56]=Oop }
+                      ;*checkcast {reexecute=0 rethrow=0 return_oop=0}
+                      ; - org.apache.flink.runtime.state.ttl.AbstractTtlState::setCurrentNamespace@4 (line 76)
+                      ; - org.apache.flink.runtime.state.AbstractKeyedStateBackend::getPartitionedState@75 (line 442)
+  0x000078d50cab9630: cc18 2dff 
+
+  0x000078d50cab9634: ;   {other}
+  0x000078d50cab9634: 0f1f 8400 | a413 001b | bef6 ffff | ff66 6690 
+
+  0x000078d50cab9644: ;   {runtime_call UncommonTrapBlob}
+  0x000078d50cab9644: c5f8 77e8 
+
+  0x000078d50cab9648: ; ImmutableOopMap {}
+                      ;*arraylength {reexecute=0 rethrow=0 return_oop=0}
+                      ; - java.lang.StringLatin1::hashCode@1 (line 192)
+                      ; - java.lang.String::hashCode@27 (line 2358)
+                      ; - java.util.HashMap::hash@9 (line 338)
+                      ; - java.util.HashMap::getNode@23 (line 576)
+                      ; - java.util.HashMap::get@2 (line 564)
+                      ; - org.apache.flink.runtime.state.AbstractKeyedStateBackend::getPartitionedState@51 (line 439)
+  0x000078d50cab9648: b418 2dff 
+
+  0x000078d50cab964c: ;   {other}
+  0x000078d50cab964c: 0f1f 8400 | bc13 001c | eb02 eb00 | 488b f0eb | 0848 8bf0 | eb03 488b | f0c5 f877 | 4883 c450 
+  0x000078d50cab966c: ;   {runtime_call _rethrow_Java}
+  0x000078d50cab966c: 5de9 8e46 
+
+  0x000078d50cab9670: ;   {internal_word}
+  0x000078d50cab9670: 3aff 49ba | 418e ab0c | d578 0000 | 4d89 9768 
+
+  0x000078d50cab9680: ;   {runtime_call SafepointBlob}
+  0x000078d50cab9680: 0400 00e9 | 7829 2dff 
+
+  0x000078d50cab9688: ;   {runtime_call StubRoutines (final stubs)}
+  0x000078d50cab9688: e813 1e2b | ffe9 c8ee | ffff f4f4 | f4f4 f4f4 
+[Stub Code]
+  0x000078d50cab9698: ;   {no_reloc}
+  0x000078d50cab9698: 48bb 009d | ba9a d478 
+
+  0x000078d50cab96a0: ;   {runtime_call I2C/C2I adapters}
+  0x000078d50cab96a0: 0000 e9c4 
+
+  0x000078d50cab96a4: ;   {static_stub}
+  0x000078d50cab96a4: 7f2c ff48 | bb00 0000 | 0000 0000 
+
+  0x000078d50cab96b0: ;   {runtime_call nmethod}
+  0x000078d50cab96b0: 00e9 fbff 
+
+  0x000078d50cab96b4: ;   {static_stub}
+  0x000078d50cab96b4: ffff 48bb | 0000 0000 | 0000 0000 
+
+  0x000078d50cab96c0: ;   {runtime_call nmethod}
+  0x000078d50cab96c0: e9fb ffff 
+
+  0x000078d50cab96c4: ;   {static_stub}
+  0x000078d50cab96c4: ff48 bb00 | 0000 0000 
+
+  0x000078d50cab96cc: ;   {runtime_call nmethod}
+  0x000078d50cab96cc: 0000 00e9 | fbff ffff 
+[Exception Handler]
+  0x000078d50cab96d4: ;   {runtime_call ExceptionBlob}
+  0x000078d50cab96d4: e927 a439 | ffe8 0000 | 0000 4883 
+
+  0x000078d50cab96e0: ;   {runtime_call DeoptimizationBlob}
+  0x000078d50cab96e0: 2c24 05e9 | b81b 2dff 
+[/MachCode]
+
+
+Compiled method (c2) 39144 14285       4       org.apache.flink.streaming.api.runners.python.beam.state.BeamKeyedStateStore::getMapState (325 bytes)
+ total in heap  [0x000078d50cb0ef90,0x000078d50cb15cc8] = 27960
+ relocation     [0x000078d50cb0f0e8,0x000078d50cb0f568] = 1152
+ main code      [0x000078d50cb0f580,0x000078d50cb13288] = 15624
+ stub code      [0x000078d50cb13288,0x000078d50cb13370] = 232
+ oops           [0x000078d50cb13370,0x000078d50cb133d0] = 96
+ metadata       [0x000078d50cb133d0,0x000078d50cb13790] = 960
+ scopes data    [0x000078d50cb13790,0x000078d50cb14e18] = 5768
+ scopes pcs     [0x000078d50cb14e18,0x000078d50cb157b8] = 2464
+ dependencies   [0x000078d50cb157b8,0x000078d50cb15820] = 104
+ handler table  [0x000078d50cb15820,0x000078d50cb15b80] = 864
+ nul chk table  [0x000078d50cb15b80,0x000078d50cb15cc8] = 328
+
+[Constant Pool (empty)]
+
+[MachCode]
+[Entry Point]
+  # {method} {0x000078d3ab3b7b08} 'getMapState' '(Lorg/apache/beam/model/fnexecution/v1/BeamFnApi$StateRequest;)Lorg/apache/flink/api/common/state/MapState;' in 'org/apache/flink/streaming/api/runners/python/beam/state/BeamKeyedStateStore'
+  # this:     rsi:rsi   = 'org/apache/flink/streaming/api/runners/python/beam/state/BeamKeyedStateStore'
+  # parm0:    rdx:rdx   = 'org/apache/beam/model/fnexecution/v1/BeamFnApi$StateRequest'
+  #           [sp+0x80]  (sp of caller)
+  0x000078d50cb0f580: 448b 5608 | 49bb 0000 | 00a3 d478 | 0000 4d03 | d349 3bc2 
+
+  0x000078d50cb0f594: ;   {runtime_call ic_miss_stub}
+  0x000078d50cb0f594: 0f85 e65a | 27ff 6690 | 0f1f 4000 
+[Verified Entry Point]
+  0x000078d50cb0f5a0: 8984 2400 | c0fe ff55 | 4883 ec70 | 4181 7f20 | 1200 0000 | 0f85 c03c | 0000 4889 | 7424 1090 
+  0x000078d50cb0f5c0: ; implicit exception: dispatches to 0x000078d50cb12cc4
+  0x000078d50cb0f5c0: 448b 5230 
+
+  0x000078d50cb0f5c4: ; implicit exception: dispatches to 0x000078d50cb130a4
+  0x000078d50cb0f5c4: 438b 6cd4 | 1883 fd02 | 0f85 fe2e | 0000 438b | 6cd4 2045 | 8b5c ec08 | 0f1f 4000 
+
+  0x000078d50cb0f5e0: ;   {metadata('org/apache/beam/model/fnexecution/v1/BeamFnApi$StateKey$MultimapSideInput')}
+  0x000078d50cb0f5e0: 4181 fb70 | 76d6 010f | 85db 3500 | 004d 8d14 | ec4c 8954 | 2428 418b | 6a28 458b | 54ec 0890 
+  0x000078d50cb0f600: ;   {metadata('org/apache/beam/vendor/grpc/v1p60p1/com/google/protobuf/ByteString$LiteralByteString')}
+  0x000078d50cb0f600: 4181 fa68 | 6d91 010f | 85a7 2a00 | 0048 c1e5 | 0344 8b55 | 1044 8954 | 240c 478b | 5cd4 0c90 
+  0x000078d50cb0f620: 4585 db77 
+
+  0x000078d50cb0f624: ;   {oop([B{0x00000006148cc6f0})}
+  0x000078d50cb0f624: 0f48 bbf0 | c68c 1406 | 0000 00e9 | 1a01 0000 | 4963 d366 | 0f1f 8400 | 0000 0000 | 4181 fb00 
+  0x000078d50cb0f644: 0010 000f | 8738 2700 | 0049 8b9f | b801 0000 | 488d 4a17 | 4c8b d149 | 83e2 f84c | 8bc3 4d03 
+  0x000078d50cb0f664: c24d 3b87 | c801 0000 | 0f83 1327 | 0000 4d89 | 87b8 0100 | 0048 8bfb | 4883 c710 | 48c7 0301 
+  0x000078d50cb0f684: 0000 0041 | 0f0d 88c0 
+
+  0x000078d50cb0f68c: ;   {metadata({type array byte})}
+  0x000078d50cb0f68c: 0000 00c7 | 4308 1823 | 0000 4489 | 5b0c 410f | 0d88 0001 | 0000 410f | 0d88 4001 | 0000 410f 
+  0x000078d50cb0f6ac: 0d88 8001 | 0000 48c1 | e903 4883 | c1fe 4833 | c048 83f9 | 087f 1048 | ffc9 784f | 4889 04cf 
+  0x000078d50cb0f6cc: 48ff c97d | f7eb 44c5 | fdef c0e9 | 0d00 0000 | c5fe 7f07 | c5fe 7f47 | 2048 83c7 | 4048 83e9 
+  0x000078d50cb0f6ec: 087d ed48 | 83c1 047c | 0cc5 fe7f | 0748 83c7 | 2048 83e9 | 0448 83c1 | 047e 1048 | ffc9 c5f9 
+  0x000078d50cb0f70c: d607 4883 | c708 48ff | c97d f345 | 85db 7632 | 488b f348 | 83c6 1044 | 8b54 240c | 49c1 e203 
+  0x000078d50cb0f72c: 448b 4424 | 0c4b 8d7c | c410 c5f8 | 7749 bac0 | 9fd6 0bd5 | 7800 0041 
+
+  0x000078d50cb0f744: ;   {other}
+  0x000078d50cb0f744: ffd2 0f1f | 8400 0000 | 0000 448b | 530c 4c8b | 5c24 1045 | 8b6b 1c0f | 1f44 0000 | 4585 ed0f 
+  0x000078d50cb0f764: 84af 2800 | 004d 8bb7 | b801 0000 | 4d8b de49 | 83c3 384f | 8d04 ec4c | 8904 2490 | 4d3b 9fc8 
+  0x000078d50cb0f784: 0100 000f | 8318 2300 | 004d 899f | b801 0000 | 410f 0d8b | c000 0000 | 49c7 0601 
+
+  0x000078d50cb0f7a0: ;   {metadata('org/apache/flink/core/memory/MemorySegment')}
+  0x000078d50cb0f7a0: 0000 0041 | c746 0840 | e71d 0145 | 8966 0c4d | 8966 184d | 8966 284d | 8966 3049 | c746 1010 
+  0x000078d50cb0f7c0: 0000 0049 | c746 2001 | 0000 0045 | 8956 0c49 | 8b87 b801 | 0000 4c8b | d849 83c3 | 104c 8bcb 
+  0x000078d50cb0f7e0: 49c1 e903 | 4589 4e24 | 4d63 c249 | 83c0 104d | 8946 1866 | 0f1f 8400 | 0000 0000 | 6666 6690 
+  0x000078d50cb0f800: 4d3b 9fc8 | 0100 000f | 83fc 2200 | 004d 899f | b801 0000 | 410f 0d8b | c000 0000 | 48c7 0001 
+  0x000078d50cb0f820: ;   {metadata('java/util/concurrent/atomic/AtomicBoolean')}
+  0x000078d50cb0f820: 0000 00c7 | 4008 404e | 0701 4489 | 600c 4d8b | de4c 8bc8 | 49c1 e903 | 4589 4e34 | 4c8b c04d 
+  0x000078d50cb0f840: 33c3 49c1 | e816 4d85 | c074 1e49 | c1eb 0948 | bf00 6088 | ffd4 7800 | 0049 03fb | 0f1f 4000 
+  0x000078d50cb0f860: 803f 020f | 85b6 1b00 | 0041 8b6e | 0c41 3bea | 410f 4fea | 4389 6cec | 100f 1f80 | 0000 0000 
+  0x000078d50cb0f880: 85ed 0f8c | 642c 0000 | 4180 7f40 | 000f 85f9 | 1a00 0047 | 8964 ec0c | 4d8b de49 | c1eb 0347 
+  0x000078d50cb0f8a0: 895c ec18 | 4d8b d64c | 8b1c 244d | 33d3 49c1 | ea16 4d85 | d274 1a49 | c1eb 0948 | bf00 6088 
+  0x000078d50cb0f8c0: ffd4 7800 | 0049 03fb | 803f 020f | 85c6 1b00 | 0047 8964 | ec14 4c8b | 5424 1045 | 8b72 2041 
+  0x000078d50cb0f8e0: 8b6a 1045 | 8b5c ec08 
+
+  0x000078d50cb0f8e8: ;   {metadata('org/apache/flink/api/java/typeutils/runtime/RowSerializer')}
+  0x000078d50cb0f8e8: 4181 fb90 | a71c 010f | 85d7 2700 | 004d 8d14 | ec45 8b5a | 1866 6690 
+
+  0x000078d50cb0f900: ; implicit exception: dispatches to 0x000078d50cb12d40
+  0x000078d50cb0f900: 478b 5cdc | 0c41 8b4a | 2045 8b44 | cc0c 4585 | c077 1248 | ba00 6088 | ffd4 7800 | 0066 6690 
+  0x000078d50cb0f920: e95c 0200 | 0045 85f6 | 0f84 6e2b | 0000 4489 | 5c24 204c | 8954 2418 | 4489 4424 | 304d 63d0 
+  0x000078d50cb0f940: 4c89 1424 | 498d 2ccc | 894c 243c | 4f8d 14f4 | 4c89 5424 | 0844 8974 | 2424 49bb | 0060 88ff 
+  0x000078d50cb0f960: d478 0000 | 4533 d241 | b801 0000 | 004c 895c | 2440 4489 | 5424 3444 | 8944 2438 | eb38 4d8b 
+  0x000078d50cb0f980: 9f58 0400 | 0044 8b44 | 2434 4503 | c244 8944 
+
+  0x000078d50cb0f990: ; ImmutableOopMap {rbp=Oop [8]=Oop [16]=Oop [24]=Oop [36]=NarrowOop [40]=Oop [60]=NarrowOop }
+                      ;*goto {reexecute=1 rethrow=0 return_oop=0}
+                      ; - (reexecute) org.apache.flink.api.java.typeutils.runtime.MaskUtils::readIntoMask@82 (line 85)
+                      ; - org.apache.flink.api.java.typeutils.runtime.MaskUtils::readIntoMask@4 (line 64)
+                      ; - org.apache.flink.api.java.typeutils.runtime.RowSerializer::deserialize@11 (line 328)
+                      ; - org.apache.flink.api.java.typeutils.runtime.RowSerializer::deserialize@2 (line 69)
+                      ; - org.apache.flink.streaming.api.runners.python.beam.state.BeamKeyedStateStore::getMapState@59 (line 154)
+                      ;   {poll}
+  0x000078d50cb0f990: 2434 4185 | 0366 6666 | 0f1f 8400 | 0000 0000 | 443b 4424 | 300f 8dc2 | 0100 0045 | 8bd0 41ff 
+  0x000078d50cb0f9b0: c244 8954 | 2438 448b | 5c24 2447 | 8b54 dc0c | 498b f248 | c1e6 0366 | 6690 c5f8 | 7748 b830 
+  0x000078d50cb0f9d0: eb1b a4d4 
+
+  0x000078d50cb0f9d4: ;   {virtual_call}
+  0x000078d50cb0f9d4: 7800 00e8 
+
+  0x000078d50cb0f9d8: ; ImmutableOopMap {rbp=Oop [8]=Oop [16]=Oop [24]=Oop [36]=NarrowOop [40]=Oop [60]=NarrowOop }
+                      ;*invokevirtual read {reexecute=0 rethrow=0 return_oop=0}
+                      ; - java.io.DataInputStream::readUnsignedByte@4 (line 295)
+                      ; - org.apache.flink.api.java.typeutils.runtime.MaskUtils::readIntoMask@18 (line 77)
+                      ; - org.apache.flink.api.java.typeutils.runtime.MaskUtils::readIntoMask@4 (line 64)
+                      ; - org.apache.flink.api.java.typeutils.runtime.RowSerializer::deserialize@11 (line 328)
+                      ; - org.apache.flink.api.java.typeutils.runtime.RowSerializer::deserialize@2 (line 69)
+                      ; - org.apache.flink.streaming.api.runners.python.beam.state.BeamKeyedStateStore::getMapState@59 (line 154)
+  0x000078d50cb0f9d8: 4462 cbff 
+
+  0x000078d50cb0f9dc: ;   {other}
+  0x000078d50cb0f9dc: 0f1f 8400 | 4c0a 0001 | 85c0 0f8c | f82b 0000 | 448b 4424 | 3044 2b44 | 2434 41ba | 0800 0000 
+  0x000078d50cb0f9fc: 453b d045 | 0f4f d045 | 85d2 0f8e | 72ff ffff | 448b 4424 | 3444 3b44 | 2430 0f83 | 2429 0000 
+  0x000078d50cb0fa1c: 4d63 da48 | 634c 2434 | 4d8d 040b | 49ff c84c | 3b04 240f | 830b 2900 | 008b d881 | e380 0000 
+  0x000078d50cb0fa3c: 0066 6690 | 85db 0f8f | e02e 0000 | 4488 640d | 1049 ffcb | d1e0 4981 | fb00 0000 | 8049 c7c0 
+  0x000078d50cb0fa5c: 0000 0080 | 4d0f 4cd8 | 458b db41 | 83fb 010f | 8e23 2900 | 0048 637c | 2438 41b8 | 0100 0000 
+  0x000078d50cb0fa7c: 458b cb45 | 2bc8 33db | 453b d844 | 0f4c cb41 | 81f9 d007 | 0000 bad0 | 0700 0044 | 0f47 ca45 
+  0x000078d50cb0fa9c: 03c8 6690 | 8bd8 81e3 | 8000 0000 | 85db 0f8f | 2c24 0000 | d1e0 4963 | d048 8d1c | 1144 8864 
+  0x000078d50cb0fabc: 1d10 8bd8 | 81e3 8000 | 0000 85db | 0f8f 1724 | 0000 488d | 1c17 4488 | 641d 10d1 
+
+  0x000078d50cb0fad8: ;   {no_reloc}
+  0x000078d50cb0fad8: e041 83c0 | 0266 6690 | 453b c17c | bb4d 8b8f 
+
+  0x000078d50cb0fae8: ; ImmutableOopMap {rbp=Oop [8]=Oop [16]=Oop [24]=Oop [36]=NarrowOop [40]=Oop [60]=NarrowOop }
+                      ;*goto {reexecute=1 rethrow=0 return_oop=0}
+                      ; - (reexecute) org.apache.flink.api.java.typeutils.runtime.MaskUtils::readIntoMask@72 (line 83)
+                      ; - org.apache.flink.api.java.typeutils.runtime.MaskUtils::readIntoMask@4 (line 64)
+                      ; - org.apache.flink.api.java.typeutils.runtime.RowSerializer::deserialize@11 (line 328)
+                      ; - org.apache.flink.api.java.typeutils.runtime.RowSerializer::deserialize@2 (line 69)
+                      ; - org.apache.flink.streaming.api.runners.python.beam.state.BeamKeyedStateStore::getMapState@59 (line 154)
+  0x000078d50cb0fae8: 5804 0000 
+
+  0x000078d50cb0faec: ;   {poll}
+  0x000078d50cb0faec: 4185 0145 | 3bc3 7c88 | 453b c20f | 8d81 feff | ff66 6690 | 8bd8 81e3 | 8000 0000 | 85db 0f8f 
+  0x000078d50cb0fb0c: 242e 0000 | 4d63 d84c | 03d9 4688 | 641d 1041 | ffc0 6690 | 453b c20f | 8d55 feff | ffd1 e0eb 
+  0x000078d50cb0fb2c: d366 6690 | 418b d0ff | c243 8954 | ec0c 458b | d844 8bc2 | e988 0500 | 0066 6666 | 0f1f 8400 
+  0x000078d50cb0fb4c: 0000 0000 | 488b 1424 | 448b 7424 | 084c 8b54 | 2418 448b | 5c24 0c48 | 8b4c 2430 | e974 0100 
+  0x000078d50cb0fb6c: 0048 8b54 | 2440 448b | 7424 244c | 8b54 2418 | 448b 5c24 | 2041 0fb6 | 6a14 85ed | 0f84 9e2a 
+  0x000078d50cb0fb8c: 0000 418b | 4a20 458b | 4ccc 0c66 | 0f1f 8400 | 0000 0000 | 4183 f901 | 0f86 4225 | 0000 410f 
+  0x000078d50cb0fbac: b66c cc10 | 85ed 0f85 | a42a 0000 | 410f b66c | cc11 6690 | 85ed 0f85 | c82a 0000 | 4181 fb00 
+  0x000078d50cb0fbcc: 0004 000f | 87a2 1f00 | 004d 8baf | b801 0000 | 4d63 c34a | 8d0c 8517 | 0000 004c 
+
+  0x000078d50cb0fbe8: ;   {no_reloc}
+  0x000078d50cb0fbe8: 8bc1 4983 | e0f8 4d8b | cd4d 03c8 | 0f1f 8400 | 0000 0000 | 6666 6690 | 4d3b 8fc8 | 0100 000f 
+  0x000078d50cb0fc08: 836a 1f00 | 004d 898f | b801 0000 | 410f 0d89 | c000 0000 | 49c7 4500 | 0100 0000 | 410f 0d89 
+  0x000078d50cb0fc28: 0001 0000 
+
+  0x000078d50cb0fc2c: ;   {metadata('java/lang/Object'[])}
+  0x000078d50cb0fc2c: 41c7 4508 | 7012 0000 | 4589 5d0c | 410f 0d89 | 4001 0000 | 498b fd48 | 83c7 1041 | 0f0d 8980 
+  0x000078d50cb0fc4c: 0100 0048 | c1e9 0348 | 83c1 fe48 | 33c0 4883 | f908 7f10 | 48ff c978 | 4f48 8904 | cf48 ffc9 
+  0x000078d50cb0fc6c: 7df7 eb44 | c5fd efc0 | e90d 0000 | 00c5 fe7f | 07c5 fe7f | 4720 4883 | c740 4883 | e908 7ded 
+  0x000078d50cb0fc8c: 4883 c104 | 7c0c c5fe | 7f07 4883 | c720 4883 | e904 4883 | c104 7e10 | 48ff c9c5 | f9d6 0748 
+  0x000078d50cb0fcac: 83c7 0848 | ffc9 7df3 | 4585 db0f | 8636 0100 | 0066 6690 | 4585 db0f | 86d6 2600 | 0045 8bc3 
+  0x000078d50cb0fccc: 41ff c845 | 3bc3 0f83 | c726 0000 | 498b ce48 | c1e1 0333 | db41 8b7a | 2041 8b72 | 0c44 8d0c 
+  0x000078d50cb0fcec: 3345 8b44 | fc0c 453b | c80f 8345 | 2200 004d | 8d04 fc48 | 63eb 4c63 | ce4c 03cd | 470f b64c 
+  0x000078d50cb0fd0c: 0810 4585 | c90f 854d | 2500 0041 | 8b7a 180f | 1f44 0000 
+
+  0x000078d50cb0fd20: ; implicit exception: dispatches to 0x000078d50cb12cac
+  0x000078d50cb0fd20: 418b 74fc | 0c3b de0f 
+
+  0x000078d50cb0fd28: ;   {no_reloc}
+  0x000078d50cb0fd28: 8357 2200 | 0089 5c24 | 4048 894c | 2430 4c89 | 6c24 2044 | 895c 240c | 4c89 5424 | 1844 8974 
+  0x000078d50cb0fd48: 2408 4889 | 1424 4d8d | 14fc 458b | 5caa 1049 | 8bf3 48c1 | e603 488b | d190 c5f8 | 7748 b800 
+  0x000078d50cb0fd68: e819 a4d4 
+
+  0x000078d50cb0fd6c: ;   {virtual_call}
+  0x000078d50cb0fd6c: 7800 00e8 
+
+  0x000078d50cb0fd70: ; ImmutableOopMap {[8]=NarrowOop [16]=Oop [24]=Oop [32]=Oop [40]=Oop [48]=Oop }
+                      ;*invokevirtual deserialize {reexecute=0 rethrow=0 return_oop=1}
+                      ; - org.apache.flink.api.java.typeutils.runtime.RowSerializer::deserialize@78 (line 342)
+                      ; - org.apache.flink.api.java.typeutils.runtime.RowSerializer::deserialize@2 (line 69)
+                      ; - org.apache.flink.streaming.api.runners.python.beam.state.BeamKeyedStateStore::getMapState@59 (line 154)
+  0x000078d50cb0fd70: acc2 cbff 
+
+  0x000078d50cb0fd74: ;   {other}
+  0x000078d50cb0fd74: 0f1f 8400 | e40d 0003 | 4c8b f04c | 8b6c 2420 | 498d 6cad | 1041 807f | 4000 0f85 | 5515 0000 
+  0x000078d50cb0fd94: 4c8b dd8b | 5c24 40ff | c34d 8bd6 | 49c1 ea03 | 4489 5500 | 4d8b d64d | 33d3 49c1 | ea16 4d85 
+  0x000078d50cb0fdb4: d274 1f4d | 85f6 741a | 49c1 eb09 | 48bf 0060 | 88ff d478 | 0000 4903 | fb80 3f02 | 0f85 5015 
+  0x000078d50cb0fdd4: 0000 6666 | 0f1f 8400 | 0000 0000 | 3b5c 240c | 0f8c 66fd | ffff 488b | 1424 4c8b | 5424 184d 
+  0x000078d50cb0fdf4: 8b9f b801 | 0000 418b | 6a1c 4d8b | d349 83c2 | 204d 3b97 | c801 0000 | 0f83 bf1d | 0000 4d89 
+  0x000078d50cb0fe14: 97b8 0100 | 0041 0f0d | 8ac0 0000 | 0049 c703 | 0100 0000 
+
+  0x000078d50cb0fe28: ;   {metadata('org/apache/flink/types/Row')}
+  0x000078d50cb0fe28: 41c7 4308 | f8a9 1c01 | 4d89 6310 | 4d89 6318 
+
+  0x000078d50cb0fe38: ;   {oop(a 'org/apache/flink/types/RowKind'{0x0000000612a4e348})}
+  0x000078d50cb0fe38: 41c7 430c | 699c 54c2 | 4189 6b18 | 4d8b d549 | c1ea 0345 | 8953 104c | 8b54 2410 | 418b 6a0c 
+  0x000078d50cb0fe58: ; implicit exception: dispatches to 0x000078d50cb12d88
+  0x000078d50cb0fe58: 458b 54ec | 0866 6690 
+
+  0x000078d50cb0fe60: ;   {metadata('org/apache/flink/state/rocksdb/RocksDBKeyedStateBackend')}
+  0x000078d50cb0fe60: 4181 fa00 | 8870 010f | 85af 2200 | 0049 8d04 | ec44 8b48 | 1047 8b44 | cc08 660f | 1f44 0000 
+  0x000078d50cb0fe80: ;   {metadata('org/apache/flink/table/runtime/typeutils/RowDataSerializer')}
+  0x000078d50cb0fe80: 4181 f8b0 | 9dd6 010f | 84a7 2100 
+
+  0x000078d50cb0fe8c: ;   {metadata('org/apache/flink/streaming/api/operators/sorted/state/BatchExecutionKeyedStateBackend')}
+  0x000078d50cb0fe8c: 0041 81fa | 0090 cc01 | 0f84 ba21 | 0000 448b | 4014 6690 
+
+  0x000078d50cb0fea0: ; implicit exception: dispatches to 0x000078d50cb12dc0
+  0x000078d50cb0fea0: 438b 6cc4 | 1085 ed0f | 8f13 2800 | 0044 8b50 | 4847 8b4c | d408 6666 | 0f1f 8400 | 0000 0000 
+  0x000078d50cb0fec0: ;   {metadata('org/apache/flink/runtime/state/InternalKeyContextImpl')}
+  0x000078d50cb0fec0: 4181 f968 | cfca 010f | 856b 2200 | 004b 8d1c | d441 807f | 4000 0f85 | 0915 0000 | 448b 480c 
+  0x000078d50cb0fee0: 4c8b c349 | 8bcb 48c1 | e903 894b | 1849 8bfb | 4933 f848 
+
+  0x000078d50cb0fef4: ;   {oop(a 'org/apache/flink/types/RowKind'{0x0000000612a4e348})}
+  0x000078d50cb0fef4: c1ef 16bb | 699c 54c2 | 410f be4c | dc18 4885 | ff0f 84ba | 1400 0049 | c1e8 0948 | bf00 6088 
+  0x000078d50cb0ff14: ffd4 7800 | 0049 03f8 | 0f1f 4000 | 803f 020f | 85bf 1500 | 0049 8bf5 | 4889 5424 | 5048 8944 
+  0x000078d50cb0ff34: 2418 4489 | 5424 0844 | 894c 240c | 8be9 c1e5 | 052b e990 
+
+  0x000078d50cb0ff48: ;   {static_call}
+  0x000078d50cb0ff48: c5f8 77e8 
+
+  0x000078d50cb0ff4c: ; ImmutableOopMap {[8]=NarrowOop [16]=Oop [24]=Oop [40]=Oop }
+                      ;*invokestatic deepHashCodeInternal {reexecute=0 rethrow=0 return_oop=0}
+                      ; - org.apache.flink.types.RowUtils::deepHashCodeRow@14 (line 143)
+                      ; - org.apache.flink.types.Row::hashCode@12 (line 418)
+                      ; - org.apache.flink.runtime.state.KeyGroupRangeAssignment::assignToKeyGroup@8 (line 65)
+                      ; - org.apache.flink.runtime.state.AbstractKeyedStateBackend::setCurrentKey@24 (line 262)
+                      ; - org.apache.flink.state.rocksdb.RocksDBKeyedStateBackend::setCurrentKey@2 (line 522)
+                      ; - org.apache.flink.streaming.api.utils.PythonOperatorUtils::setCurrentKeyForStreaming@9 (line 35)
+                      ; - org.apache.flink.streaming.api.runners.python.beam.state.BeamKeyedStateStore::setCurrentKey@49 (line 207)
+                      ; - org.apache.flink.streaming.api.runners.python.beam.state.BeamKeyedStateStore::getMapState@67 (line 155)
+  0x000078d50cb0ff4c: 3092 ceff 
+
+  0x000078d50cb0ff50: ;   {other}
+  0x000078d50cb0ff50: 0f1f 8400 | c00f 0004 | 03c5 4469 | d051 2d9e | ccc4 437b | f0d2 1145 | 69da 9335 | 871b c443 
+  0x000078d50cb0ff70: 7bf0 db13 | 478d 149b | 4181 c264 | 6b54 e645 | 8bda 4183 | f304 41c1 | eb10 4533 | da41 83f3 
+  0x000078d50cb0ff90: 0445 69db | 6bca eb85 | 458b c341 | c1e8 0d45 | 33c3 4569 | d035 aeb2 | c241 8bc2 | c1e8 1041 
+  0x000078d50cb0ffb0: 33c2 85c0 | 7d17 6666 | 0f1f 8400 | 0000 0000 | 3d00 0000 | 800f 847a | 2900 00f7 | d844 8b5c 
+  0x000078d50cb0ffd0: 240c 4585 | db0f 8491 | 2000 003d | 0000 0080 | 7508 33d2 | 4183 fbff | 7404 9941 | f7fb 448b 
+  0x000078d50cb0fff0: 4424 0847 | 8b5c c408 | 0f1f 8400 | 0000 0000 
+
+  0x000078d50cb10000: ;   {metadata('org/apache/flink/runtime/state/InternalKeyContextImpl')}
+  0x000078d50cb10000: 4181 fb68 | cfca 010f | 855f 2100 | 004f 8d1c | c445 8b43 | 1443 8b6c | c40c 660f | 1f44 0000 
+  0x000078d50cb10020: 3bd5 0f8c | 0c25 0000 | 438b 6cc4 | 103b d50f | 8fc3 2600 | 0041 8953 | 104c 8b54 | 2418 418b 
+  0x000078d50cb10040: 4a48 458b | 44cc 0845 | 8b9a 9800 
+
+  0x000078d50cb1004c: ;   {metadata('org/apache/flink/runtime/state/InternalKeyContextImpl')}
+  0x000078d50cb1004c: 0000 4181 | f868 cfca | 010f 8535 | 2100 004d | 8d14 cc41 | 8b7a 1045 | 8b4a 1843 | 8b4c dc20 
+  0x000078d50cb1006c: 4789 64dc | 1447 8964 | dc10 418b | 54cc 1045 | 8964 cc0c | 438b 5cdc | 0c4b 8d34 | dcff cb85 
+  0x000078d50cb1008c: db0f 8c7b | 0000 0045 | 8b54 d40c | 0f1f 8400 | 0000 0000 | 4585 d20f | 86ad 0900 | 00c5 f96e 
+  0x000078d50cb100ac: ca45 8bf3 | 41c7 44cc | 0c01 0000 | 0049 8d2c | cc44 8be9 | 498d 0cd4 | 41b8 0100 | 0000 4533 
+  0x000078d50cb100cc: db8d 14dd | 0000 0000 | c4e2 6bf7 | c70f 1f80 | 0000 0000 | 453b da0f | 83df 1e00 | 0042 8844 
+  0x000078d50cb100ec: 1910 4d8b | 9f58 0400 
+
+  0x000078d50cb100f4: ; ImmutableOopMap {r9=NarrowOop rcx=Oop rsi=Oop rbp=Oop r13=NarrowOop r14=NarrowOop xmm1=NarrowOop [16]=Oop [40]=Oop }
+                      ;*goto {reexecute=1 rethrow=0 return_oop=0}
+                      ; - (reexecute) org.apache.flink.runtime.state.CompositeKeySerializationUtils::writeKeyGroup@20 (line 115)
+                      ; - org.apache.flink.runtime.state.SerializedCompositeKeyBuilder::serializeKeyGroupAndKey@13 (line 190)
+                      ; - org.apache.flink.runtime.state.SerializedCompositeKeyBuilder::setKeyAndKeyGroup@3 (line 95)
+                      ; - org.apache.flink.state.rocksdb.RocksDBKeyedStateBackend::setCurrentKey@17 (line 523)
+                      ; - org.apache.flink.streaming.api.utils.PythonOperatorUtils::setCurrentKeyForStreaming@9 (line 35)
+                      ; - org.apache.flink.streaming.api.runners.python.beam.state.BeamKeyedStateStore::setCurrentKey@49 (line 207)
+                      ; - org.apache.flink.streaming.api.runners.python.beam.state.BeamKeyedStateStore::getMapState@67 (line 155)
+                      ;   {poll}
+  0x000078d50cb100f4: 0041 8503 | ffcb 660f | 1f44 0000 | 85db 0f8d | 3d09 0000 | 458b de41 | 8bcd 438b | 6cdc 1c45 
+  0x000078d50cb10114: 8b54 ec08 | 0f1f 8400 | 0000 0000 
+
+  0x000078d50cb10120: ;   {metadata('org/apache/flink/api/java/typeutils/runtime/RowSerializer')}
+  0x000078d50cb10120: 4181 fa90 | a71c 010f | 8587 2000 | 0049 8d1c | ec47 8b44 | cc08 6666 | 0f1f 8400 | 0000 0000 
+  0x000078d50cb10140: ;   {metadata('org/apache/flink/types/Row')}
+  0x000078d50cb10140: 4181 f8f8 | a91c 010f | 8593 2a00 | 004b 8d14 | cc8b 6a14 | 85ed 0f85 | d025 0000 | 4489 1c24 
+  0x000078d50cb10160: 48c1 e103 | 488b ee48 | 8bf3 6690 
+
+  0x000078d50cb1016c: ;   {optimized virtual_call}
+  0x000078d50cb1016c: c5f8 77e8 
+
+  0x000078d50cb10170: ; ImmutableOopMap {rbp=Oop [0]=NarrowOop [16]=Oop [40]=Oop }
+                      ;*invokevirtual serializePositionBased {reexecute=0 rethrow=0 return_oop=0}
+                      ; - org.apache.flink.api.java.typeutils.runtime.RowSerializer::serialize@13 (line 277)
+                      ; - org.apache.flink.api.java.typeutils.runtime.RowSerializer::serialize@6 (line 69)
+                      ; - org.apache.flink.runtime.state.SerializedCompositeKeyBuilder::serializeKeyGroupAndKey@25 (line 192)
+                      ; - org.apache.flink.runtime.state.SerializedCompositeKeyBuilder::setKeyAndKeyGroup@3 (line 95)
+                      ; - org.apache.flink.state.rocksdb.RocksDBKeyedStateBackend::setCurrentKey@17 (line 523)
+                      ; - org.apache.flink.streaming.api.utils.PythonOperatorUtils::setCurrentKeyForStreaming@9 (line 35)
+                      ; - org.apache.flink.streaming.api.runners.python.beam.state.BeamKeyedStateStore::setCurrentKey@49 (line 207)
+                      ; - org.apache.flink.streaming.api.runners.python.beam.state.BeamKeyedStateStore::getMapState@67 (line 155)
+  0x000078d50cb10170: 4c5d c7ff 
+
+  0x000078d50cb10174: ;   {other}
+  0x000078d50cb10174: 0f1f 8400 | e411 0006 | 448b 0c24 | 478b 54cc | 2047 8b5c | d40c 4789 | 5ccc 104c | 8b4c 2428 
+  0x000078d50cb10194: 418b 6920 
+
+  0x000078d50cb10198: ; implicit exception: dispatches to 0x000078d50cb12ecc
+  0x000078d50cb10198: 458b 54ec | 0866 6690 
+
+  0x000078d50cb101a0: ;   {metadata('java/lang/String')}
+  0x000078d50cb101a0: 4181 fa78 | e800 000f | 8563 2a00 | 004d 8d14 | ec45 0fbe | 4210 418b | 4a14 660f | 1f44 0000 
+  0x000078d50cb101c0: 4585 c00f | 85fc 2300 | 0045 8b54 | cc0c 498d | 2ccc 4963 | fa66 6666 | 0f1f 8400 | 0000 0000 
+  0x000078d50cb101e0: 4181 fa00 | 0010 000f | 872e 1a00 | 0049 8b9f | b801 0000 | 4c8d 5f17 | 4983 e3f8 | 4c8b c34d 
+  0x000078d50cb10200: 03c3 4d3b | 87c8 0100 | 000f 830c | 1a00 004d | 8987 b801 | 0000 410f | 0d88 c000 | 0000 48c7 
+  0x000078d50cb10220: 0301 0000 | 0041 0f0d | 8800 0100 
+
+  0x000078d50cb1022c: ;   {metadata({type array byte})}
+  0x000078d50cb1022c: 00c7 4308 | 1823 0000 | 4489 530c | 410f 0d88 | 4001 0000 | 410f 0d88 | 8001 0000 | 48ff 7424 
+  0x000078d50cb1024c: 2848 8f44 | 2408 894c | 2418 4489 | 5424 1c48 | 893c 2444 | 8b5c 2418 | 4b8d 7cdc | 1048 8bf3 
+  0x000078d50cb1026c: 4883 c610 | 488b 1424 | 4883 c207 | 48c1 ea03 | c5f8 7749 | ba00 a4d6 | 0bd5 7800 | 0041 ffd2 
+  0x000078d50cb1028c: ;   {other}
+  0x000078d50cb1028c: 0f1f 8400 | 0000 0000 
+
+  0x000078d50cb10294: ;   {oop(a 'java/util/Base64$Decoder'{0x000000061496f8a0})}
+  0x000078d50cb10294: 49ba a0f8 | 9614 0600 | 0000 410f | b66a 0c85 | ed0f 85bd | 2400 0044 | 8b54 241c | 4585 d20f 
+  0x000078d50cb102b4: 86d3 2400 | 000f 1f80 | 0000 0000 | 4183 fa02 | 0f8c ea24 
+
+  0x000078d50cb102c8: ;   {oop(a 'java/util/Base64$Decoder'{0x000000061496f8a0})}
+  0x000078d50cb102c8: 0000 49bb | a0f8 9614 | 0600 0000 | 410f b66b | 0d0f 1f80 | 0000 0000 | 85ed 0f85 | f424 0000 
+  0x000078d50cb102e8: 8b6c 241c | ffcd 3b6c | 241c 0f83 | 8c1d 0000 | 488b 3c24 | 0f1f 4000 | 807c 3b0f | 3d74 148b 
+  0x000078d50cb10308: 6c24 1c83 | e503 85ed | 0f85 4f27 | 0000 4533 | c0eb 228b | 6c24 1c83 | c5fe 3b6c | 241c 0f83 
+  0x000078d50cb10328: 4c21 0000 | 807c 3b0e | 3d0f 84a7 | 0f00 0041 | b801 0000 | 0048 83c7 | 0348 c1ff | 028b ef44 
+  0x000078d50cb10348: 8d1c 6d00 | 0000 0041 | 03eb 412b | e866 6666 | 0f1f 8400 | 0000 0000 | 81fd 0000 | 1000 0f87 
+  0x000078d50cb10368: ec18 0000 | 4d8b 8fb8 | 0100 004d | 63c0 4963 | cb48 03cf | 492b c848 | 83c1 174c | 8bd9 4983 
+  0x000078d50cb10388: e3f8 4d8b | c14d 03c3 | 4d3b 87c8 | 0100 000f | 83bb 1800 | 004d 8987 | b801 0000 | 410f 0d88 
+  0x000078d50cb103a8: c000 0000 | 49c7 0101 | 0000 0041 | 0f0d 8800 
+
+  0x000078d50cb103b8: ;   {metadata({type array byte})}
+  0x000078d50cb103b8: 0100 0041 | c741 0818 | 2300 0041 | 8969 0c41 | 0f0d 8840 | 0100 0049 | 8bf9 4883 | c710 410f 
+  0x000078d50cb103d8: 0d88 8001 | 0000 48c1 | e903 4883 | c1fe 4833 | c048 83f9 | 087f 1048 | ffc9 784f | 4889 04cf 
+  0x000078d50cb103f8: 48ff c97d | f7eb 44c5 | fdef c0e9 | 0d00 0000 | c5fe 7f07 | c5fe 7f47 | 2048 83c7 | 4048 83e9 
+  0x000078d50cb10418: 087d ed48 | 83c1 047c | 0cc5 fe7f | 0748 83c7 | 2048 83e9 | 0448 83c1 | 047e 1048 | ffc9 c5f9 
+  0x000078d50cb10438: d607 4883 | c708 48ff | c97d f348 | 8944 24f8 | 8b44 241c | 8904 2448 | 8b44 24f8 | 4889 5c24 
+  0x000078d50cb10458: 1889 6c24 | 204c 894c 
+
+  0x000078d50cb10460: ;   {oop(a 'java/util/Base64$Decoder'{0x000000061496f8a0})}
+  0x000078d50cb10460: 2428 48be | a0f8 9614 | 0600 0000 | 488b 5424 | 1833 c944 | 8b04 2490 
+
+  0x000078d50cb10478: ;   {optimized virtual_call}
+  0x000078d50cb10478: c5f8 77e8 
+
+  0x000078d50cb1047c: ; ImmutableOopMap {[8]=Oop [16]=Oop [40]=Oop }
+                      ;*invokevirtual decode0 {reexecute=0 rethrow=0 return_oop=0}
+                      ; - java.util.Base64$Decoder::decode@17 (line 570)
+                      ; - java.util.Base64$Decoder::decode@8 (line 593)
+                      ; - org.apache.flink.streaming.api.runners.python.beam.state.BeamKeyedStateStore::getMapState@77 (line 158)
+  0x000078d50cb1047c: 8064 0700 
+
+  0x000078d50cb10480: ;   {other}
+  0x000078d50cb10480: 0f1f 8400 | f014 0007 | 3b44 2420 | 0f85 7223 
+
+  0x000078d50cb10490: ;   {oop(a 'org/apache/flink/fnexecution/v1/FlinkFnApi$StateDescriptor$1'{0x0000000612f74190})}
+  0x000078d50cb10490: 0000 48be | 9041 f712 | 0600 0000 
+
+  0x000078d50cb1049c: ;   {oop(a 'org/apache/flink/api/python/shaded/com/google/protobuf/ExtensionRegistry'{0x000000061496f880})}
+  0x000078d50cb1049c: 49b9 80f8 | 9614 0600 | 0000 488b | 5424 2833 | c944 8b44 | 2420 6690 
+
+  0x000078d50cb104b4: ;   {optimized virtual_call}
+  0x000078d50cb104b4: c5f8 77e8 
+
+  0x000078d50cb104b8: ; ImmutableOopMap {[8]=Oop [16]=Oop }
+                      ;*invokevirtual parsePartialFrom {reexecute=0 rethrow=0 return_oop=1}
+                      ; - org.apache.flink.api.python.shaded.com.google.protobuf.AbstractParser::parseFrom@7 (line 168)
+                      ; - org.apache.flink.api.python.shaded.com.google.protobuf.AbstractParser::parseFrom@6 (line 180)
+                      ; - org.apache.flink.api.python.shaded.com.google.protobuf.AbstractParser::parseFrom@5 (line 185)
+                      ; - org.apache.flink.api.python.shaded.com.google.protobuf.AbstractParser::parseFrom@2 (line 25)
+                      ; - org.apache.flink.fnexecution.v1.FlinkFnApi$StateDescriptor::parseFrom@4 (line 38611)
+                      ; - org.apache.flink.streaming.api.runners.python.beam.state.BeamKeyedStateStore::getMapState@84 (line 159)
+  0x000078d50cb104b8: 449b eaff 
+
+  0x000078d50cb104bc: ;   {other}
+  0x000078d50cb104bc: 0f1f 8400 | 2c15 0008 
+
+  0x000078d50cb104c4: ; implicit exception: dispatches to 0x000078d50cb130c8
+  0x000078d50cb104c4: 448b 5808 
+
+  0x000078d50cb104c8: ;   {metadata('org/apache/flink/fnexecution/v1/FlinkFnApi$StateDescriptor')}
+  0x000078d50cb104c8: 4181 fba8 | a2d6 010f | 850b 1d00 | 004c 8bf0 | 410f be6e | 1c66 6690 | 83fd 010f | 8443 2300 
+  0x000078d50cb104e8: 0085 ed0f | 845f 2300 | 0041 c646 | 1c01 418b | 6e20 458b | 5cec 0890 
+
+  0x000078d50cb10500: ;   {metadata('java/lang/String')}
+  0x000078d50cb10500: 4181 fb78 | e800 000f | 8523 2700 | 004d 8d14 | ec41 8b4a | 1445 8b5c | cc0c 660f | 1f44 0000 
+  0x000078d50cb10520: 4585 db0f | 86de 0c00 | 0041 0fbe | 7210 c442 | 4af7 cb4d | 63c9 498d | 590d 660f | 1f44 0000 
+  0x000078d50cb10540: 83fe 010f | 845c 1900 | 008b eb85 | ed0f 8c7d | 2300 004c | 8bc3 49c1 | f820 418b | f844 0fbe 
+  0x000078d50cb10560: c7c4 e239 | f7ed 85ed | 0f8c 8a23 | 0000 81fd | 0000 1000 | 0f87 451d | 0000 4c63 | c566 6690 
+  0x000078d50cb10580: 81fd 0000 | 1000 0f87 | 0017 0000 | 4d8b afb8 | 0100 0049 | 83c0 1749 | 83e0 f849 | 8bfd 4903 
+  0x000078d50cb105a0: f849 3bbf | c801 0000 | 0f83 de16 | 0000 4989 | bfb8 0100 | 000f 0d8f | c000 0000 | 49c7 4500 
+  0x000078d50cb105c0: 0100 0000 | 0f0d 8f00 
+
+  0x000078d50cb105c8: ;   {metadata({type array byte})}
+  0x000078d50cb105c8: 0100 0041 | c745 0818 | 2300 0041 | 896d 0c0f | 0d8f 4001 | 0000 0f0d | 8f80 0100 | 0049 2bd9 
+  0x000078d50cb105e8: 448b c349 | b900 0000 | 0001 0000 | 0049 3bd9 | 0f8d 1a14 | 0000 4d8d | 14cc 4d8d | 4ccc 1085 
+  0x000078d50cb10608: f60f 8538 | 1300 0045 | 85c0 0f8c | e81c 0000 | 478d 1418 | 0f1f 4000 | 413b ea0f | 82d7 1c00 
+  0x000078d50cb10628: 0045 85db | 7623 4b8d | 7405 1049 | 63d3 498b | f9c5 f877 | 49ba 80a0 | d60b d578 | 0000 41ff 
+  0x000078d50cb10648: ;   {other}
+  0x000078d50cb10648: d20f 1f84 | 0000 0000 | 0048 83c3 | f344 8bd3 | 49bb 0000 | 0000 0100 | 0000 493b | db0f 8df2 
+  0x000078d50cb10668: 1300 0045 | 85d2 0f8c | 531c 0000 | 458d 420d | 0f1f 8400 | 0000 0000 | 413b e80f | 823e 1c00 
+  0x000078d50cb10688: 004b 8d74 | 1510 ba0d 
+
+  0x000078d50cb10690: ;   {oop([B{0x0000000612fac4e0})}
+  0x000078d50cb10690: 0000 0041 | ba9c 585f | c24f 8d1c | d44b 8d7c | d410 c5f8 | 7749 ba80 | a0d6 0bd5 | 7800 0041 
+  0x000078d50cb106b0: ;   {other}
+  0x000078d50cb106b0: ffd2 0f1f | 8400 0000 | 0000 498b | ed48 c1ed | 0348 85db | 0f85 5b16 | 0000 498b | 87b8 0100 
+  0x000078d50cb106d0: 004c 8bd0 | 4983 c218 | 0f1f 8400 | 0000 0000 | 4d3b 97c8 | 0100 000f | 8309 1600 | 004d 8997 
+  0x000078d50cb106f0: b801 0000 | 410f 0d8a | c000 0000 | 48c7 0001 
+
+  0x000078d50cb10700: ;   {metadata('java/lang/String')}
+  0x000078d50cb10700: 0000 00c7 | 4008 78e8 | 0000 4489 | 600c 4c89 | 6010 8968 | 144c 8b54 | 2410 418b | 6a24 6690 
+  0x000078d50cb10720: ; implicit exception: dispatches to 0x000078d50cb12f3c
+  0x000078d50cb10720: 458b 5cec 
+
+  0x000078d50cb10724: ;   {metadata('java/util/HashMap')}
+  0x000078d50cb10724: 0841 81fb | 00b7 0800 | 0f85 d61a | 0000 4d8d | 14ec 458b | 5224 660f | 1f44 0000 | 4585 d20f 
+  0x000078d50cb10744: 8430 0b00 | 0043 8b4c | d40c 85c9 | 0f86 4621 | 0000 4c8b | c844 8b40 | 0c4b 8d34 | d4ff c945 
+  0x000078d50cb10764: 85c0 0f85 | 2f02 0000 | 440f b650 | 1145 85d2 | 0f85 0b0b | 0000 448b | 5014 6690 | 8078 1000 
+  0x000078d50cb10784: 0f85 050b | 0000 438b | 54d4 0c4f | 8d1c d44b | 8d7c d410 | 0f1f 8400 | 0000 0000 | 83fa 020f 
+  0x000078d50cb107a4: 8cce 0b00 | 0033 db83 | fa20 0f8c | 7501 0000 | 4533 dbc5 | d5ef edc5 | cdef f6c5 | c5ef ffc4 
+  0x000078d50cb107c4: 413d efc0 
+
+  0x000078d50cb107c8: ;   {external_word}
+  0x000078d50cb107c8: 49ba c00d | 6022 d578 | 0000 458b | 02c4 c179 | 6ec0 c4e2 | 7d58 c044 | 8bd2 4183 | e2e0 410f 
+  0x000078d50cb107e8: afd8 c421 | 7a7e 0c1f | c421 7a7e | 541f 08c4 | 217a 7e5c | 1f10 c421 | 7a7e 641f | 18c4 e255 
+  0x000078d50cb10808: 40e8 c442 | 7d31 c9c4 | c155 fee9 | c4e2 4d40 | f0c4 427d | 31d2 c4c1 | 4dfe f2c4 | e245 40f8 
+  0x000078d50cb10828: c442 7d31 | dbc4 c145 | fefb c462 | 3d40 c0c4 | 427d 31e4 | c441 3dfe | c441 83c3 | 2045 3bda 
+  0x000078d50cb10848: 7c9c 4a8d | 3c17 412b 
+
+  0x000078d50cb10850: ;   {external_word}
+  0x000078d50cb10850: d249 bac4 | 0d60 22d5 | 7800 00c4 | c17e 6f0a | c4e2 5540 
+
+  0x000078d50cb10864: ;   {external_word}
+  0x000078d50cb10864: e949 bae4 | 0d60 22d5 | 7800 00c4 | c17e 6f12 | c4e2 4d40 
+
+  0x000078d50cb10878: ;   {external_word}
+  0x000078d50cb10878: f249 ba04 | 0e60 22d5 | 7800 00c4 | c17e 6f1a | c4e2 4540 
+
+  0x000078d50cb1088c: ;   {external_word}
+  0x000078d50cb1088c: fb49 ba24 | 0e60 22d5 | 7800 00c4 | c17e 6f22 | c462 3d40 | c4c4 6255 | 02cd c443 | 7d39 ca01 
+  0x000078d50cb108ac: c441 31fe | cac4 4231 | 02c9 c579 | 6ed3 c441 | 31fe cac5 | 797e cbc4 | 624d 02de | c443 7d39 
+  0x000078d50cb108cc: dc01 c441 | 21fe dcc4 | 4221 02db | c579 6ee3 | c441 21fe | dcc5 797e | dbc4 6245 | 02cf c443 
+  0x000078d50cb108ec: 7d39 ca01 | c441 31fe | cac4 4231 | 02c9 c579 | 6ed3 c441 | 31fe cac5 | 797e cbc4 | 423d 02d8 
+  0x000078d50cb1090c: c443 7d39 | dc01 c441 | 21fe dcc4 | 4221 02db | c579 6ee3 | c441 21fe | dcc5 797e | db41 bb01 
+  0x000078d50cb1092c: 0000 0044 | 3bda 0f8d | 2e00 0000 | 41b8 c103 | 0000 410f | afd8 460f | b654 1fff | 458b c241 
+  0x000078d50cb1094c: c1e0 0545 | 2bc2 4103 | d846 0fb6 | 041f 4103 | d841 83c3 | 0244 3bda | 7cd2 7f12 | 448b d3c1 
+  0x000078d50cb1096c: e305 412b | da46 0fb6 | 441f ff41 | 03d8 660f | 1f44 0000 | 85db 0f84 | f00b 0000 | 4189 590c 
+  0x000078d50cb1098c: ;   {no_reloc}
+  0x000078d50cb1098c: 448b d341 | c1ea 1044 | 33d3 4123 | caeb 0d45 | 8bd0 41c1 | ea10 4533 | d041 23ca | 448b 448e 
+  0x000078d50cb109ac: 1045 85c0 | 0f84 be01 | 0000 478b | 5cc4 0c0f | 1f44 0000 | 453b da0f | 85fe 0000 | 0047 8b5c 
+  0x000078d50cb109cc: c410 4b8d | 2cc4 498b | d348 c1e2 | 0349 3bd1 | 7437 4489 | 4424 2444 | 8954 2420 | 4c89 4c24 
+  0x000078d50cb109ec: 184c 8934 | 2449 8bf1 
+
+  0x000078d50cb109f4: ;   {optimized virtual_call}
+  0x000078d50cb109f4: c5f8 77e8 
+
+  0x000078d50cb109f8: ; ImmutableOopMap {rbp=Oop [0]=Oop [8]=Oop [16]=Oop [24]=Oop [36]=NarrowOop }
+                      ;*invokevirtual equals {reexecute=0 rethrow=0 return_oop=0}
+                      ; - java.util.HashMap::getNode@63 (line 578)
+                      ; - java.util.HashMap::get@2 (line 564)
+                      ; - org.apache.flink.streaming.api.runners.python.beam.state.BeamKeyedStateStore::getMapState@107 (line 161)
+  0x000078d50cb109f8: 44ea 7fff 
+
+  0x000078d50cb109fc: ;   {other}
+  0x000078d50cb109fc: 0f1f 8400 | 6c1a 0009 | 85c0 0f84 | a800 0000 | 4c8b 3424 | 4c8b 4c24 | 188b 6d14 | 0f1f 8400 
+  0x000078d50cb10a1c: 0000 0000 | 85ed 0f84 | 4c01 0000 | 458b 5cec 
+
+  0x000078d50cb10a2c: ;   {metadata('org/apache/flink/api/common/state/MapStateDescriptor')}
+  0x000078d50cb10a2c: 0841 81fb | 5814 1b01 | 0f85 1a22 | 0000 498d | 1cec 6690 | e9eb 0500 | 0045 3bc2 | 0f8c e2f0 
+  0x000078d50cb10a4c: ffff 458b | de41 8bcd | eb03 4533 | c08d 34dd | 0000 0000 | c4e2 4bf7 | f740 0fbe | eebe 45ff 
+  0x000078d50cb10a6c: ffff 488b | 5424 1048 | 8914 2448 | 8b54 2428 | 4889 5424 | 0844 894c | 2410 897c | 2414 895c 
+  0x000078d50cb10a8c: 2418 4489 | 4424 1c44 | 8954 2420 | 4489 5c24 | 2489 4c24 | 2c66 6690 
+
+  0x000078d50cb10aa4: ;   {runtime_call UncommonTrapBlob}
+  0x000078d50cb10aa4: c5f8 77e8 
+
+  0x000078d50cb10aa8: ; ImmutableOopMap {[0]=Oop [8]=Oop [16]=NarrowOop [36]=NarrowOop [44]=NarrowOop }
+                      ;*if_icmplt {reexecute=1 rethrow=0 return_oop=0}
+                      ; - (reexecute) org.apache.flink.core.memory.DataOutputSerializer::write@9 (line 101)
+                      ; - org.apache.flink.core.memory.DataOutputSerializer::writeByte@2 (line 144)
+                      ; - org.apache.flink.runtime.state.CompositeKeySerializationUtils::writeKeyGroup@15 (line 115)
+                      ; - org.apache.flink.runtime.state.SerializedCompositeKeyBuilder::serializeKeyGroupAndKey@13 (line 190)
+                      ; - org.apache.flink.runtime.state.SerializedCompositeKeyBuilder::setKeyAndKeyGroup@3 (line 95)
+                      ; - org.apache.flink.state.rocksdb.RocksDBKeyedStateBackend::setCurrentKey@17 (line 523)
+                      ; - org.apache.flink.streaming.api.utils.PythonOperatorUtils::setCurrentKeyForStreaming@9 (line 35)
+                      ; - org.apache.flink.streaming.api.runners.python.beam.state.BeamKeyedStateStore::setCurrentKey@49 (line 207)
+                      ; - org.apache.flink.streaming.api.runners.python.beam.state.BeamKeyedStateStore::getMapState@67 (line 155)
+  0x000078d50cb10aa8: 54a4 27ff 
+
+  0x000078d50cb10aac: ;   {other}
+  0x000078d50cb10aac: 0f1f 8400 | 1c1b 000a | 4c8b 3424 | 4c8b 4c24 | 1844 8b54 | 2420 448b | 4424 2447 | 8b5c c418 
+  0x000078d50cb10acc: 4585 db0f | 849f 0000 | 0043 8b5c | c408 660f | 1f44 0000 
+
+  0x000078d50cb10ae0: ;   {metadata('java/util/HashMap$TreeNode')}
+  0x000078d50cb10ae0: 81fb 70e9 | 1a00 0f84 | 9c1f 0000 | 4b8d 2cdc | 448b 450c | 453b c274 | 1c49 8b97 | 5804 0000 
+  0x000078d50cb10b00: ; ImmutableOopMap {r11=NarrowOop r9=Oop r14=Oop [8]=Oop [16]=Oop }
+                      ;*ifnonnull {reexecute=1 rethrow=0 return_oop=0}
+                      ; - (reexecute) java.util.HashMap::getNode@145 (line 587)
+                      ; - java.util.HashMap::get@2 (line 564)
+                      ; - org.apache.flink.streaming.api.runners.python.beam.state.BeamKeyedStateStore::getMapState@107 (line 161)
+  0x000078d50cb10b00: 448b 5d18 
+
+  0x000078d50cb10b04: ;   {poll}
+  0x000078d50cb10b04: 8502 4585 | db0f 8465 | 0000 004b | 8d2c dceb | db44 8b5d | 1049 8bd3 | 48c1 e203 | 493b d10f 
+  0x000078d50cb10b24: 84ec feff | ff44 8954 | 2428 4c89 | 4c24 204c | 8974 2418 | 4c8b 5424 | 104c 8914 | 2449 8bf1 
+  0x000078d50cb10b44: ;   {optimized virtual_call}
+  0x000078d50cb10b44: c5f8 77e8 
+
+  0x000078d50cb10b48: ; ImmutableOopMap {rbp=Oop [0]=Oop [8]=Oop [24]=Oop [32]=Oop }
+                      ;*invokevirtual equals {reexecute=0 rethrow=0 return_oop=0}
+                      ; - java.util.HashMap::getNode@128 (line 585)
+                      ; - java.util.HashMap::get@2 (line 564)
+                      ; - org.apache.flink.streaming.api.runners.python.beam.state.BeamKeyedStateStore::getMapState@107 (line 161)
+  0x000078d50cb10b48: 3448 27ff 
+
+  0x000078d50cb10b4c: ;   {other}
+  0x000078d50cb10b4c: 0f1f 8400 | bc1b 000c | 85c0 0f84 | 641f 0000 | 4c8b 1424 | 4c89 5424 | 104c 8b74 | 2418 4c8b 
+  0x000078d50cb10b6c: 4c24 20e9 | a1fe ffff | 498b 87b8 | 0100 004c | 8bd0 4983 | c228 4d3b | 97c8 0100 | 000f 837b 
+  0x000078d50cb10b8c: 1200 004d | 8997 b801 | 0000 410f | 0d8a c000 | 0000 48c7 | 0001 0000 
+
+  0x000078d50cb10ba4: ;   {metadata('org/apache/flink/api/common/state/MapStateDescriptor')}
+  0x000078d50cb10ba4: 00c7 4008 | 5814 1b01 | 4489 600c | 4c89 6010 | 4c89 6018 | 4c89 6020 | 4c8b d84c | 8b54 2410 
+  0x000078d50cb10bc4: 418b 6a14 | 498b 87b8 | 0100 004c | 8bd0 4983 | c218 6666 | 0f1f 8400 | 0000 0000 | 4d3b 97c8 
+  0x000078d50cb10be4: 0100 000f | 835a 1200 | 004d 8997 | b801 0000 | 410f 0d8a | c000 0000 | 48c7 0001 
+
+  0x000078d50cb10c00: ;   {metadata('org/apache/flink/api/common/typeutils/base/MapSerializer')}
+  0x000078d50cb10c00: 0000 00c7 | 4008 5870 | 8b01 4489 | 600c 4c89 | 6010 4c89 | 7424 184c | 894c 2420 | 4c89 5c24 
+  0x000078d50cb10c20: 2848 8904 
+
+  0x000078d50cb10c24: ;   {oop("The key serializer cannot be null"{0x0000000612f18cc8})}
+  0x000078d50cb10c24: 2448 bac8 | 8cf1 1206 
+
+  0x000078d50cb10c2c: ;   {oop(a 'org/apache/flink/streaming/api/utils/ByteArrayWrapperSerializer'{0x000000061513d5f0})}
+  0x000078d50cb10c2c: 0000 0048 | bef0 d513 | 1506 0000 | 0066 6690 
+
+  0x000078d50cb10c3c: ;   {static_call}
+  0x000078d50cb10c3c: c5f8 77e8 
+
+  0x000078d50cb10c40: ; ImmutableOopMap {rbp=NarrowOop [0]=Oop [8]=Oop [16]=Oop [24]=Oop [32]=Oop [40]=Oop }
+                      ;*invokestatic checkNotNull {reexecute=0 rethrow=0 return_oop=1}
+                      ; - org.apache.flink.api.common.typeutils.base.MapSerializer::<init>@8 (line 64)
+                      ; - org.apache.flink.api.common.state.MapStateDescriptor::<init>@8 (line 62)
+                      ; - org.apache.flink.streaming.api.runners.python.beam.state.BeamKeyedStateStore::getMapState@153 (line 168)
+  0x000078d50cb10c40: bcda c6ff 
+
+  0x000078d50cb10c44: ;   {other}
+  0x000078d50cb10c44: 0f1f 8400 | b41c 000d | 488b d844 | 8b58 0849 | ba00 0000 | a3d4 7800 | 004d 03d3 | 4d8b 5238 
+  0x000078d50cb10c64: ;   {metadata('org/apache/flink/api/common/typeutils/TypeSerializer')}
+  0x000078d50cb10c64: 49bb 60ba | 19a4 d478 | 0000 4d3b | d30f 8571 | 1700 0066 | 0f1f 8400 | 0000 0000 | 4180 7f40 
+  0x000078d50cb10c84: 000f 85fc | 0800 004c | 8b2c 244d | 8bd5 4c8b | db49 c1eb | 0345 895d | 0c4c 8bdb | 4d33 da48 
+  0x000078d50cb10ca4: 8bf5 48c1 | e603 49c1 | eb16 4d85 | db74 1a49 | c1ea 0948 | bf00 6088 | ffd4 7800 | 0049 03fa 
+  0x000078d50cb10cc4: 803f 020f | 8572 0a00 | 004c 896c 
+
+  0x000078d50cb10cd0: ;   {oop("The value serializer cannot be null."{0x0000000612f18c78})}
+  0x000078d50cb10cd0: 2430 48ba | 788c f112 | 0600 0000 | 498b ed90 
+
+  0x000078d50cb10ce0: ;   {static_call}
+  0x000078d50cb10ce0: c5f8 77e8 
+
+  0x000078d50cb10ce4: ; ImmutableOopMap {rbp=Oop [8]=Oop [16]=Oop [24]=Oop [32]=Oop [40]=Oop [48]=Oop }
+                      ;*invokestatic checkNotNull {reexecute=0 rethrow=0 return_oop=1}
+                      ; - org.apache.flink.api.common.typeutils.base.MapSerializer::<init>@21 (line 66)
+                      ; - org.apache.flink.api.common.state.MapStateDescriptor::<init>@8 (line 62)
+                      ; - org.apache.flink.streaming.api.runners.python.beam.state.BeamKeyedStateStore::getMapState@153 (line 168)
+  0x000078d50cb10ce4: 18da c6ff 
+
+  0x000078d50cb10ce8: ;   {other}
+  0x000078d50cb10ce8: 0f1f 8400 | 581d 000e | 488b e844 | 8b50 0849 | bb00 0000 | a3d4 7800 | 004d 03da | 4d8b 5338 
+  0x000078d50cb10d08: ;   {metadata('org/apache/flink/api/common/typeutils/TypeSerializer')}
+  0x000078d50cb10d08: 49bb 60ba | 19a4 d478 | 0000 4d3b | d30f 85e5 | 1600 000f | 1f44 0000 | 4180 7f40 | 000f 85d4 
+  0x000078d50cb10d28: 0800 0048 | 8b5c 2430 | 4c8b d34c | 8bc5 49c1 | e803 4489 | 4310 4c8b | dd4d 33da | 49c1 eb16 
+  0x000078d50cb10d48: ;   {oop(a 'org/apache/flink/api/common/state/StateTtlConfig'{0x0000000614450420})}
+  0x000078d50cb10d48: 48bd 2004 | 4514 0600 | 0000 4d85 | db74 1a49 | c1ea 0948 | bf00 6088 | ffd4 7800 | 0049 03fa 
+  0x000078d50cb10d68: 803f 020f | 85d4 0a00 | 004d 8b8f | b801 0000 | 4d8b d149 | 83c2 1090 | 4d3b 97c8 | 0100 000f 
+  0x000078d50cb10d88: 83e8 1000 | 004d 8997 | b801 0000 | 410f 0d8a | c000 0000 | 49c7 0101 
+
+  0x000078d50cb10da0: ;   {metadata('java/util/concurrent/atomic/AtomicReference')}
+  0x000078d50cb10da0: 0000 0041 | c741 0870 | 6105 0145 | 8961 0c41 | 807f 4000 | 0f85 8508 | 0000 4c8b | 7424 284d 
+  0x000078d50cb10dc0: 8bd6 4d8b | c149 c1e8 | 0345 8946 | 104d 8bd9 | 4d33 da49 | c1eb 164d | 85db 741a | 49c1 ea09 
+  0x000078d50cb10de0: 48bf 0060 | 88ff d478 | 0000 4903 | fa80 3f02 | 0f85 a109 | 0000 6666 | 0f1f 8400 | 0000 0000 
+  0x000078d50cb10e00: 4180 7f40 | 000f 85ba 
+
+  0x000078d50cb10e08: ;   {oop(a 'org/apache/flink/api/common/state/StateTtlConfig'{0x0000000614450420})}
+  0x000078d50cb10e08: 0700 0041 | c746 1c84 | a088 c24c | 8bd5 4d8b | de4d 33d3 | 49c1 ea16 | 4d85 d274 | 1a49 c1eb 
+  0x000078d50cb10e28: 0948 bf00 | 6088 ffd4 | 7800 0049 | 03fb 803f | 020f 85af | 0900 0048 | 895c 2430 | 4c89 7424 
+  0x000078d50cb10e48: 2848 8b74 
+
+  0x000078d50cb10e4c: ;   {oop("name must not be null"{0x00000006127e67a8})}
+  0x000078d50cb10e4c: 2420 48ba | a867 7e12 | 0600 0000 | 498b ee90 
+
+  0x000078d50cb10e5c: ;   {static_call}
+  0x000078d50cb10e5c: c5f8 77e8 
+
+  0x000078d50cb10e60: ; ImmutableOopMap {rbp=Oop [8]=Oop [16]=Oop [24]=Oop [32]=Oop [40]=Oop [48]=Oop }
+                      ;*invokestatic checkNotNull {reexecute=0 rethrow=0 return_oop=1}
+                      ; - org.apache.flink.api.common.state.StateDescriptor::<init>@26 (line 128)
+                      ; - org.apache.flink.api.common.state.MapStateDescriptor::<init>@12 (line 62)
+                      ; - org.apache.flink.streaming.api.runners.python.beam.state.BeamKeyedStateStore::getMapState@153 (line 168)
+  0x000078d50cb10e60: 9cd8 c6ff 
+
+  0x000078d50cb10e64: ;   {other}
+  0x000078d50cb10e64: 0f1f 8400 | d41e 000f | 488b d844 | 8b58 0866 | 0f1f 8400 | 0000 0000 | 6666 6690 
+
+  0x000078d50cb10e80: ;   {metadata('java/lang/String')}
+  0x000078d50cb10e80: 4181 fb78 | e800 000f | 858b 1500 | 0041 807f | 4000 0f85 | e707 0000 | 4c8b ed4d | 8bd5 4c8b 
+  0x000078d50cb10ea0: c349 c1e8 | 0345 8945 | 0c4c 8bdb | 4d33 da49 | c1eb 164d | 85db 741a | 49c1 ea09 | 48bf 0060 
+  0x000078d50cb10ec0: 88ff d478 | 0000 4903 | fa80 3f02 | 0f85 c509 | 0000 418b | 6d10 4c89 | 6c24 2848 | 8b74 2430 
+  0x000078d50cb10ee0: ;   {oop("serializer must not be null"{0x00000006147d9030})}
+  0x000078d50cb10ee0: 48ba 3090 | 7d14 0600 | 0000 4c89 | 2c24 6690 
+
+  0x000078d50cb10ef0: ;   {static_call}
+  0x000078d50cb10ef0: c5f8 77e8 
+
+  0x000078d50cb10ef4: ; ImmutableOopMap {rbp=NarrowOop [0]=Oop [8]=Oop [16]=Oop [24]=Oop [32]=Oop [40]=Oop }
+                      ;*invokestatic checkNotNull {reexecute=0 rethrow=0 return_oop=1}
+                      ; - org.apache.flink.api.common.state.StateDescriptor::<init>@42 (line 129)
+                      ; - org.apache.flink.api.common.state.MapStateDescriptor::<init>@12 (line 62)
+                      ; - org.apache.flink.streaming.api.runners.python.beam.state.BeamKeyedStateStore::getMapState@153 (line 168)
+  0x000078d50cb10ef4: 08d8 c6ff 
+
+  0x000078d50cb10ef8: ;   {other}
+  0x000078d50cb10ef8: 0f1f 8400 | 681f 0010 | 488b d844 | 8b58 0849 | ba00 0000 | a3d4 7800 | 004d 03d3 | 4d8b 5238 
+  0x000078d50cb10f18: ;   {metadata('org/apache/flink/api/common/typeutils/TypeSerializer')}
+  0x000078d50cb10f18: 49bb 60ba | 19a4 d478 | 0000 4d3b | d30f 8505 | 1500 0085 | ed0f 849d | 1400 0041 | 807f 4000 
+  0x000078d50cb10f38: 0f85 8107 | 0000 4c8b | d34d 8d1c | ec4c 8bc3 | 49c1 e803 | 4589 44ec | 0c4d 33d3 | 49c1 ea16 
+  0x000078d50cb10f58: 4d85 d274 | 1649 c1eb | 094c 8b44 | 2450 4d03 | c341 8038 | 020f 8575 | 0900 00f0 | 8344 24c0 
+  0x000078d50cb10f78: 000f 1f80 | 0000 0000 | 4180 7f40 | 000f 8574 | 0700 004c | 8b14 2445 | 8962 2048 | 8b74 2418 
+  0x000078d50cb10f98: ;   {optimized virtual_call}
+  0x000078d50cb10f98: c5f8 77e8 
+
+  0x000078d50cb10f9c: ; ImmutableOopMap {[0]=Oop [8]=Oop [16]=Oop [24]=Oop [32]=Oop [40]=Oop }
+                      ;*invokevirtual hasStateTtlConfig {reexecute=0 rethrow=0 return_oop=0}
+                      ; - org.apache.flink.streaming.api.runners.python.beam.state.BeamKeyedStateStore::getMapState@160 (line 171)
+  0x000078d50cb10f9c: 8d23 0000 
+
+  0x000078d50cb10fa0: ;   {other}
+  0x000078d50cb10fa0: 0f1f 8400 | 1020 0011 | 85c0 7444 | 488b 7424 | 1866 6690 
+
+  0x000078d50cb10fb4: ;   {optimized virtual_call}
+  0x000078d50cb10fb4: c5f8 77e8 
+
+  0x000078d50cb10fb8: ; ImmutableOopMap {[0]=Oop [8]=Oop [16]=Oop [32]=Oop [40]=Oop }
+                      ;*invokevirtual getStateTtlConfig {reexecute=0 rethrow=0 return_oop=1}
+                      ; - org.apache.flink.streaming.api.runners.python.beam.state.BeamKeyedStateStore::getMapState@168 (line 173)
+  0x000078d50cb10fb8: 8023 0000 
+
+  0x000078d50cb10fbc: ;   {other}
+  0x000078d50cb10fbc: 0f1f 8400 | 2c20 0012 | 488b f090 
+
+  0x000078d50cb10fc8: ;   {static_call}
+  0x000078d50cb10fc8: 

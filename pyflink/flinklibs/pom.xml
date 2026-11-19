@@ -1,0 +1,91 @@
+  <project>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>local.test</groupId>
+    <artifactId>flink-parquet-test</artifactId>
+    <version>1.0</version>
+
+    <dependencyManagement>
+      <dependencies>
+        <!-- Keep Hadoop, Parquet, and the Flink S3 filesystem on one
+             Jackson version when all dependencies share the PyFlink classpath. -->
+        <dependency>
+          <groupId>com.fasterxml.jackson</groupId>
+          <artifactId>jackson-bom</artifactId>
+          <version>2.15.3</version>
+          <type>pom</type>
+          <scope>import</scope>
+        </dependency>
+      </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+      <dependency>
+        <groupId>org.apache.flink</groupId>
+        <artifactId>flink-parquet</artifactId>
+        <version>2.3.0</version>
+      </dependency>
+      <!-- avro-confluent format: reads/writes Avro with Confluent Schema Registry
+           (a shaded JAR that includes the Schema Registry client and the plain
+           "avro" format, so flink-avro must not be added next to it). -->
+      <dependency>
+        <groupId>org.apache.flink</groupId>
+        <artifactId>flink-sql-avro-confluent-registry</artifactId>
+        <version>2.3.0</version>
+      </dependency>
+      <dependency>
+        <groupId>com.mysql</groupId>
+        <artifactId>mysql-connector-j</artifactId>
+        <version>8.4.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.flink</groupId>
+        <artifactId>flink-s3-fs-hadoop</artifactId>
+        <version>2.3.0</version>
+      </dependency>
+      <!-- Flink 2.3 has no published Kafka connector yet. This is the
+           currently published connector line for Flink 2.2; replace it with
+           a 2.3-built JAR when one becomes available. -->
+      <dependency>
+        <groupId>org.apache.flink</groupId>
+        <artifactId>flink-connector-kafka</artifactId>
+        <version>5.0.0-2.2</version>
+      </dependency>
+      <!-- The JDBC connector is published as core plus database modules. -->
+      <dependency>
+        <groupId>org.apache.flink</groupId>
+        <artifactId>flink-connector-jdbc-core</artifactId>
+        <version>4.1.0-2.2</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.flink</groupId>
+        <artifactId>flink-connector-jdbc-mysql</artifactId>
+        <version>4.1.0-2.2</version>
+      </dependency>
+      <!-- flink-parquet uses parquet-hadoop, which loads Hadoop classes at
+           runtime. Keep this version aligned with the local Hadoop install. -->
+      <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-common</artifactId>
+        <version>3.3.4</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-mapreduce-client-core</artifactId>
+        <version>3.3.4</version>
+      </dependency>
+
+      <!--
+        Flink 2.3 has no official OpenSearch connector. Do not add a
+        flink-connector-opensearch artifact with a different Flink version:
+        use a separately maintained compatible connector or implement a
+        custom sink when OpenSearch integration is required.
+      -->
+
+      <!--
+        No flink-connector-jdbc:2.3.0 artifact is published. The latest
+        published connector line targets Flink 2.2 (4.1.0-2.2), so it must
+        not be mixed into this Flink 2.3 classpath. Add a connector built for
+        Flink 2.3 separately when one becomes available.
+      -->
+    </dependencies>
+  </project>

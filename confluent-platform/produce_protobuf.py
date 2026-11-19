@@ -4,8 +4,11 @@
 from __future__ import annotations
 
 import argparse
+import itertools
 import os
+import signal
 import sys
+import threading
 
 from confluent_kafka import KafkaException, Producer
 from confluent_kafka.schema_registry import SchemaRegistryClient
@@ -33,7 +36,19 @@ def parse_args() -> argparse.Namespace:
         "--schema-registry-url",
         default=os.environ.get("SCHEMA_REGISTRY_URL", "http://sa01:8081"),
     )
-    parser.add_argument("--count", type=int, default=5)
+    parser.add_argument(
+        "--count",
+        type=int,
+        default=100,
+        help="Number of records to produce (default: 100; -1 = no limit, stop with Ctrl+C).",
+    )
+    parser.add_argument(
+        "--interval",
+        type=float,
+        help=(
+            "Seconds to wait between records (default: 0, or 0.1 when --count is -1)."
+        ),
+    )
     return parser.parse_args()
 
 
@@ -47,12 +62,33 @@ def make_order(number: int) -> order_pb2.Order:
     )
 
 
+def record_numbers(count: int, interval: float, stop: threading.Event):
+    """Yield 1, 2, 3, ... up to count (-1 = no limit) or until Ctrl+C sets stop."""
+    numbers = itertools.count(1) if count == -1 else range(1, count + 1)
+    for number in numbers:
+        if stop.is_set():
+            return
+        yield number
+        if interval and stop.wait(interval):
+            return
+
+
+def stop_on_ctrl_c() -> threading.Event:
+    """Return an event that is set when the user presses Ctrl+C."""
+    stop = threading.Event()
+    signal.signal(signal.SIGINT, lambda *_: stop.set())
+    return stop
+
+
 def main() -> int:
     """Register the Protobuf schema and produce sample orders."""
     args = parse_args()
-    if args.count < 1:
-        print("--count must be at least 1.", file=sys.stderr)
+    if args.count < 1 and args.count != -1:
+        print("--count must be at least 1, or -1 for no limit.", file=sys.stderr)
         return 2
+    if args.interval is None:
+        args.interval = 0.1 if args.count == -1 else 0.0
+    stop = stop_on_ctrl_c()
 
     try:
         schema_registry = SchemaRegistryClient({"url": args.schema_registry_url})
@@ -79,7 +115,8 @@ def main() -> int:
                 f"partition={message.partition()} offset={message.offset()}"
             )
 
-        for number in range(1, args.count + 1):
+        number = 0
+        for number in record_numbers(args.count, args.interval, stop):
             order = make_order(number)
             context = SerializationContext(args.topic, MessageField.VALUE)
             serialized_value = serializer(order, context)
@@ -100,7 +137,7 @@ def main() -> int:
             return 1
         if delivery_errors:
             print(
-                f"Delivered {delivered}/{args.count} records; "
+                f"Delivered {delivered}/{number} records; "
                 f"{len(delivery_errors)} delivery error(s).",
                 file=sys.stderr,
             )
