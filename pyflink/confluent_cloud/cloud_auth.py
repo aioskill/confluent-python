@@ -96,6 +96,7 @@ def ensure_topics(*names):
     admin = AdminClient(confluent_kafka_properties())
     existing = set(admin.list_topics(timeout=30).topics)
     missing = [NewTopic(name, num_partitions=1) for name in names if name not in existing]
-    for name, future in admin.create_topics(missing).items():
-        future.result()
-        print(f"Created topic {name} (1 partition)", flush=True)
+    if missing:
+        for name, future in admin.create_topics(missing).items():
+            future.result()
+            print(f"Created topic {name} (1 partition)", flush=True)
