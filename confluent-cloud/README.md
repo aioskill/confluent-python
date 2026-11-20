@@ -28,6 +28,12 @@ connector that runs on your own VM, see
 [Lab 6B: PostgreSQL Sink Connector on Your Own VM](LAB-6B-POSTGRES-SINK-ON-PREM.md).
 For Tableflow, which turns a Kafka topic into an Iceberg table that you read without
 Kafka, see [Lab 8: Tableflow](LAB-8-TABLEFLOW.md).
+For stream processing with SQL on a managed ksqlDB cluster, see
+[Lab 10: ksqlDB](LAB-10-KSQLDB.md).
+For stream processing with Flink SQL on Confluent Cloud, see
+[Lab 11: Flink SQL](LAB-11-FLINK-SQL.md).
+For monitoring Confluent Cloud with the Metrics API and Prometheus, see
+[Lab 13: Monitoring](lab13/LAB-13-MONITORING.md).
 
 For a managed JDBC (PostgreSQL) source connector that reaches a private AWS RDS
 database over PrivateLink, see

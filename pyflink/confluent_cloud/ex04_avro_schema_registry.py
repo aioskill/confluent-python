@@ -19,7 +19,7 @@ Submit to a Flink cluster (needs the avro-confluent JAR installed by setup_pyfli
 
 Delete the topic and the schema when you are done::
 
-    python /home/aio/training/confluent-python/confluent-cloud/manage_topics.py delete alice-orders_avro --yes
+    python ./confluent-cloud/manage_topics.py delete alice-orders_avro --yes
 """
 
 import argparse
@@ -86,7 +86,9 @@ def main():
     # name com.example.confluent.Order (Flink would generate a record name otherwise).
     # The columns are NOT NULL because the Avro fields are not nullable unions.
     schema = json.dumps(ORDER_SCHEMA).replace("'", "''")
-    table_env.execute_sql(kafka_table("orders_sink", args, f"'avro-confluent.schema' = '{schema}',"))
+    stmnt = kafka_table("orders_sink", args, f"'avro-confluent.schema' = '{schema}',")
+    print(f"Create orders_sink table with schema: {stmnt}", flush=True)
+    table_env.execute_sql(stmnt)
     table_env.execute_sql("""
         INSERT INTO orders_sink VALUES
             ('order-0001', 'customer-1', 12.5, 'CREATED'),

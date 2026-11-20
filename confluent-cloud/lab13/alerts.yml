@@ -1,0 +1,29 @@
+groups:
+  - name: confluent-cloud
+    rules:
+      # A consumer group that falls behind: more than 100 records unread for 5 minutes.
+      - alert: ConsumerLagHigh
+        expr: sum by (consumer_group_id, topic) (confluent_kafka_server_consumer_lag_offsets) > 100
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Consumer group {{ $labels.consumer_group_id }} lags on {{ $labels.topic }}"
+
+      # Prometheus reaches the Metrics API but it cannot read a resource (role or ID problem).
+      - alert: MetricsResourceAccessError
+        expr: confluent_scrape_resource_access_error == 1
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Metrics API cannot read {{ $labels.resource_id }}"
+
+      # The scrape of the Metrics API itself fails.
+      - alert: MetricsScrapeDown
+        expr: up{job="confluent-cloud"} == 0
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Prometheus cannot scrape the Confluent Cloud Metrics API"

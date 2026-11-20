@@ -53,7 +53,7 @@ Limits:
   * The Platform registry's compatibility setting applies. A schema that conflicts
     with one already under the subject makes the copy fail with an error.
 
-Cloud settings come from /home/aio/training/confluent-python/confluent-cloud/.env
+Cloud settings come from ./confluent-cloud/.env
 (BOOTSTRAP_SERVERS, KEY, SECRET, SCHEMA_REGISTRY_ENDPOINT, SCHEMA_REGISTRY_KEY,
 SCHEMA_REGISTRY_SECRET). Platform settings come from CONFLUENT_SASL_PASSWORD or
 /app/confluent/etc/kafka/client.properties, as in the other scripts here.

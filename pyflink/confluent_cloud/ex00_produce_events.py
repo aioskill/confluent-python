@@ -16,11 +16,11 @@ Run (from this script's directory)::
 
 Check the topics with the Confluent Cloud console, or::
 
-    python /home/aio/training/confluent-python/confluent-cloud/consume_messages.py alice-page_views --count 3
+    python ./confluent-cloud/consume_messages.py alice-page_views --count 3
 
 Delete the topics when you are done::
 
-    python /home/aio/training/confluent-python/confluent-cloud/manage_topics.py delete alice-page_views --yes
+    python ./confluent-cloud/manage_topics.py delete alice-page_views --yes
 """
 
 import argparse

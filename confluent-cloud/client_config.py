@@ -158,3 +158,16 @@ def cloud_cluster_id() -> str:
             "Could not infer the Cloud cluster ID; set KAFKA_CLUSTER_ID."
         )
     return cluster_id
+
+
+def ksqldb_config() -> dict[str, str]:
+    """Read the ksqlDB cluster endpoint and its API key pair."""
+    endpoint = _setting("KSQLDB_ENDPOINT")
+    username = _setting("KSQLDB_KEY")
+    password = _setting("KSQLDB_SECRET")
+    if not endpoint or not username or not password:
+        raise RuntimeError(
+            "Set KSQLDB_ENDPOINT, KSQLDB_KEY and KSQLDB_SECRET in .env "
+            "(see LAB-10-KSQLDB.md)."
+        )
+    return {"endpoint": endpoint.rstrip("/"), "key": username, "secret": password}

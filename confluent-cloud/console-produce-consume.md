@@ -4,7 +4,7 @@ This exercise creates a Kafka topic in Confluent Cloud, writes text records with
 
 ## Prerequisites
 
-- Run these commands from `~/training/confluent-python/confluent-cloud`.
+- Run these commands from `./confluent-cloud`.
 - Python dependencies are installed: `python3 -m pip install -r requirements.txt`.
 - The Confluent CLI is installed and on `PATH`: `confluent version`.
 - The Kafka API key in `.env` has permission to create the topic, produce to it, consume from it, and use a consumer group. If topic creation is not granted, create the topic through an administrator and continue at step 3.
@@ -16,7 +16,7 @@ The `.env` file is already ignored by Git. Do not print, paste, or commit its va
 The Confluent CLI accepts a JSON client config. Generate it from the project's existing credential loader, which reads `.env` without echoing the values. The file is created with owner-only permissions and is Git-ignored.
 
 ```bash
-cd ~/training/confluent-python/confluent-cloud
+cd ./confluent-cloud
 python3 - <<'PY'
 import json
 import os
@@ -69,7 +69,7 @@ Leave the consumer running. The CLI creates a random consumer group by default, 
 In a second terminal, open the same project directory:
 
 ```bash
-cd ~/training/confluent-python/confluent-cloud
+cd ./confluent-cloud
 ```
 
 Start the producer:

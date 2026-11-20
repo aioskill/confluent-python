@@ -1,7 +1,7 @@
 """Confluent Cloud connection settings shared by the PyFlink examples in this folder.
 
-The settings are read by /home/aio/training/confluent-python/confluent-cloud/client_config.py,
-from the environment or from /home/aio/training/confluent-python/confluent-cloud/.env:
+The settings are read by ./confluent-cloud/client_config.py,
+from the environment or from ./confluent-cloud/.env:
 
     BOOTSTRAP_SERVERS, KEY, SECRET                          Kafka cluster and its API key
     SCHEMA_REGISTRY_ENDPOINT, SCHEMA_REGISTRY_KEY,

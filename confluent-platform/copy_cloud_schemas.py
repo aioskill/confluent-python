@@ -18,7 +18,7 @@ run again safely.
 Soft-deleted subjects and versions are not copied. The global compatibility level and
 the mode are not changed.
 
-Cloud settings come from /home/aio/training/confluent-python/confluent-cloud/.env
+Cloud settings come from ./confluent-cloud/.env
 (SCHEMA_REGISTRY_ENDPOINT, SCHEMA_REGISTRY_KEY, SCHEMA_REGISTRY_SECRET). The Platform
 registry is --target-schema-registry-url (default http://sa01:8081).
 
