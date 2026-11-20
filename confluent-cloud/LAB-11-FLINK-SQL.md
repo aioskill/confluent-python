@@ -84,7 +84,7 @@ confluent flink shell --compute-pool <COMPUTE_POOL_ID> --environment <ENVIRONMEN
 
 The shell was not tested interactively when the lab was prepared; every statement was
 run with the two commands below, which use the same service.
-
+  
 **Single commands (scriptable).** A bounded `SELECT` and the results:
 
 ```bash
