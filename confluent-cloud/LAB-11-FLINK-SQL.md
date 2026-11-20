@@ -422,7 +422,7 @@ instructor):
 
 ```bash
 confluent flink statement create totals-job-<STUDENT_ID> --compute-pool <COMPUTE_POOL_ID> \
-  --environment <ENVIRONMENT_ID> --database <KAFKA_CLUSTER_ID> --service-account <SERVICE_ACCOUNT_ID> --wait \
+  --environment <ENVIRONMENT_ID> --database <DATABASE_NAME e.g. cluster_0> --service-account <SERVICE_ACCOUNT_ID> --wait \
   --sql "INSERT INTO totals_<STUDENT_ID> SELECT customer_id, COUNT(*), SUM(amount) FROM orders_<STUDENT_ID> GROUP BY customer_id;"
 ```
 
